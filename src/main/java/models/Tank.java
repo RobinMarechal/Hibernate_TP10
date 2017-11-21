@@ -1,19 +1,66 @@
 package models;
 
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "tanks")
+@Table (name = "tanks")
 public class Tank
 {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private double capacity;
-    private String material;
+    private IntegerProperty id = new SimpleIntegerProperty(this, "id");
+    private DoubleProperty capacity = new SimpleDoubleProperty(this, "capacity");
+    private StringProperty material = new SimpleStringProperty(this, "material");
+
+    private ListProperty<Group> groups = new SimpleListProperty<>(this, "groups");
+
+    public Tank ()
+    {
+        this.groups.setValue(FXCollections.observableArrayList());
+    }
+
+
+    // -----------------------
+    // Getters
+    // -----------------------------
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    public int getId ()
+    {
+        return id.getValue();
+    }
+
+    @Column
+    public double getCapacity ()
+    {
+        return capacity.getValue();
+    }
+
+    @Column
+    public String getMaterial ()
+    {
+        return material.getValueSafe();
+    }
 
     @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tank")
-    private List<Group> groups;
+    public List<Group> getGroups ()
+    {
+        return groups.getValue();
+    }
+
+    @Transient
+    public Group getGroup ()
+    {
+        return this.groups.getValue().size() == 0 ? null : groups.getValue().get(0);
+    }
+
+    // -----------------------
+    // Setters
+    // -----------------------
 
     /**
      * A tank can contain only one group <br>
@@ -24,58 +71,97 @@ public class Tank
      */
     public Tank setGroup (Group group)
     {
-        if (groups.size() == 0)
-        {
-            this.groups.add(group);
-        }
-        else
-        {
-            this.groups.remove(0);
-            this.groups.add(group);
+        ObservableList<Group> list = this.groups.getValue();
+        while (!list.isEmpty()) {
+            list.remove(0).setTank(null);
         }
 
-        return this;
-    }
-
-    public Tank removeGroup ()
-    {
-        if (groups.size() == 1)
-        {
-            groups.remove(0);
-        }
+        this.groups.add(group);
+        group.setTank(this);
 
         return this;
     }
 
     public Tank setCapacity (double capacity)
     {
-        this.capacity = capacity;
+        this.capacity.setValue(capacity);
         return this;
     }
 
     public Tank setMaterial (String material)
     {
-        this.material = material;
+        this.material.setValue(material);
         return this;
     }
 
-    public int getId ()
+    // -----------------------
+    // Properties
+    // -----------------------
+
+    public IntegerProperty idProperty ()
     {
         return id;
     }
 
-    public double getCapacity ()
+    public DoubleProperty capacityProperty ()
     {
         return capacity;
     }
 
-    public String getMaterial ()
+    public StringProperty materialProperty ()
     {
         return material;
     }
 
-    public Group getGroup ()
+    public ListProperty<Group> groupsProperty ()
     {
-        return groups.size() == 0 ? null : groups.get(0);
+        return groups;
+    }
+
+    // -----------------------
+    // List
+    // -----------------------
+
+    public Tank removeGroup ()
+    {
+        if (groups.size() == 1) {
+            groups.remove(0);
+        }
+
+        return this;
+    }
+
+    // -----------------------
+    // Should not be called
+    // -----------------------
+
+    /**
+     * Shouldn't be called, you should not modify the id
+     *
+     * @param id whatever you want, I don't care
+     * @return this;
+     */
+    public Tank setId (int id)
+    {
+        if (this.id.getValue() == 0) {
+            this.id.set(id);
+        }
+        return this;
+    }
+
+    /**
+     * Does nothing
+     *
+     * @param groups whatever you want, I don't care
+     * @return this;
+     */
+    public Tank setGroups (List<Group> groups)
+    {
+        // The groups list should only contains one element maximum
+        if ((this.groups.getValue() == null || this.groups.getValue().isEmpty()) && !groups.isEmpty()) {
+            this.groups.set(FXCollections.observableArrayList(groups.get(0)));
+            groups.get(0).setTank(this);
+        }
+        return this;
     }
 }

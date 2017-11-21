@@ -7,8 +7,8 @@ public class Main
     public static void main (String[] args)
     {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hibernate_tp10");
-        EntityManager        em = emf.createEntityManager();
-        
+        EntityManager        em  = emf.createEntityManager();
+
         System.out.println("Hello");
     }
 }

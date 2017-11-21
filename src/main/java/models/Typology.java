@@ -1,81 +1,133 @@
 package models;
 
+import javafx.beans.property.*;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "typologies")
+@Table (name = "typologies")
 public class Typology
 {
-    @Id @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private IntegerProperty id = new SimpleIntegerProperty(this, "id");
+    private IntegerProperty nbFish = new SimpleIntegerProperty(this, "nbFish");
 
-    private int nbFish;
+    private StringProperty species = new SimpleStringProperty(this, "species");
+    private StringProperty depth = new SimpleStringProperty(this, "depth");
 
-    private String species;
+    private FloatProperty waterQuantity = new SimpleFloatProperty(this, "waterQuantity");
 
-    private float waterQuantity;
+    private ObjectProperty<Group> group = new SimpleObjectProperty<>(this, "group");
 
-    private String depth;
+
+    // -----------------------
+    // Getters
+    // -----------------------
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    public int getId ()
+    {
+        return id.getValue();
+    }
+
+    @Column
+    public int getNbFish ()
+    {
+        return nbFish.getValue();
+    }
+
+    @Column
+    public String getSpecies ()
+    {
+        return species.getValueSafe();
+    }
+
+    @Column
+    public float getWaterQuantity ()
+    {
+        return waterQuantity.getValue();
+    }
+
+    @Column
+    public String getDepth ()
+    {
+        return depth.getValueSafe();
+    }
 
     @ManyToOne
-    private Group group;
-
-    public Typology setNbFish (int nbFish)
+    public Group getGroup ()
     {
-        this.nbFish = nbFish;
+        return group.getValue();
+    }
+    // -----------------------
+    // Setters
+    // -----------------------
+
+
+    public Typology setId (int id)
+    {
+        if (this.id.getValue() == 0) {
+            this.id.set(id);
+        }
         return this;
     }
 
-    public Typology setSpecies (String species)
+    public void setNbFish (int nbFish)
     {
-        this.species = species;
+        this.nbFish.set(nbFish);
+    }
+
+    public void setSpecies (String species)
+    {
+        this.species.set(species);
+    }
+
+    public void setDepth (String depth)
+    {
+        this.depth.set(depth);
+    }
+
+    public void setWaterQuantity (float waterQuantity)
+    {
+        this.waterQuantity.set(waterQuantity);
+    }
+
+    Typology setGroup (Group group)
+    {
+        this.group.set(group);
         return this;
     }
 
-    public Typology setWaterQuantity (float waterQuantity)
-    {
-        this.waterQuantity = waterQuantity;
-        return this;
-    }
+    // -----------------------
+    // Properties
+    // -----------------------
 
-    public Typology setDepth (String depth)
-    {
-        this.depth = depth;
-        return this;
-    }
-
-    public Typology setGroup (Group group)
-    {
-        this.group = group;
-        return this;
-    }
-
-    public int getId ()
+    public IntegerProperty idProperty ()
     {
         return id;
     }
 
-    public int getNbFish ()
+    public IntegerProperty nbFishProperty ()
     {
         return nbFish;
     }
 
-    public String getSpecies ()
+    public StringProperty speciesProperty ()
     {
         return species;
     }
 
-    public float getWaterQuantity ()
-    {
-        return waterQuantity;
-    }
-
-    public String getDepth ()
+    public StringProperty depthProperty ()
     {
         return depth;
     }
 
-    public Group getGroup ()
+    public FloatProperty waterQuantityProperty ()
+    {
+        return waterQuantity;
+    }
+
+    public ObjectProperty<Group> groupProperty ()
     {
         return group;
     }
