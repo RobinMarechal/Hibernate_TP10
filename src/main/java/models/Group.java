@@ -19,7 +19,7 @@ public class Group
     private ObjectProperty<Owner> owner = new SimpleObjectProperty<>(this, "owner");
     private ObjectProperty<Tank> tank = new SimpleObjectProperty<>(this, "tank");
 
-    public Group()
+    public Group ()
     {
         this.typologies.setValue(FXCollections.observableArrayList());
     }
@@ -128,11 +128,12 @@ public class Group
     // ------------------------------
 
     /**
-     * Does nothing
+     * Set the list of typologies, only if it's not already been defined
      *
      * @param typologies whatever you want
      * @return this
      */
+    @Deprecated
     public Group setTypologies (List<Typology> typologies)
     {
         if (this.typologies.getValue() == null || this.typologies.getValue().isEmpty()) {
@@ -143,16 +144,60 @@ public class Group
     }
 
     /**
-     * Does nothing, you shouldn't modify the id
+     * Set the id, only if it's not already been defined
      *
-     * @param id whatever you want, I don't care
+     * @param id the id
      * @return this
      */
+    @Deprecated
     public Group setId (int id)
     {
         if (this.id.getValue() == 0) {
             this.id.setValue(id);
         }
         return this;
+    }
+
+    // -----------------------
+    // Others
+    // -----------------------
+
+    /**
+     * Check if all the fishes of this groups are of the same species
+     *
+     * @return true if all the fishes of this group are of the same species, false otherwise
+     */
+    public boolean areFishesAllOfTheSameSpecies ()
+    {
+        List<Typology> fishes = this.getTypologies();
+        if (!fishes.isEmpty()) {
+            String species = fishes.get(0).getSpecies();
+            for (int i = 1; i < fishes.size(); i++) {
+                if (!species.equals(fishes.get(i))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Check a given tank has sufficient water capacity to welcome this group
+     * @param tank the tank to analyze
+     * @return true if the tank has sufficient capacity to welcome this group
+     */
+    public boolean canBePlacedIn(Tank tank)
+    {
+        return tank.hasSufficientCapacityFor(this);
+    }
+
+
+    @Override
+    public String toString ()
+    {
+        return "Group{" + "id=" + getId() + ", nbMeals=" + getNbMeals() + ", typologies=" + getTypologies() + ", owner=" + getOwner() + ", tank=" +
+                getTypologies() + '}';
     }
 }

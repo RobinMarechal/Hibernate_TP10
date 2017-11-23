@@ -131,4 +131,12 @@ public class Typology
     {
         return group;
     }
+
+
+    @Override
+    public String toString ()
+    {
+        return "Typology{" + "id=" + getId() + ", nbFish=" + getNbFish() + ", species=" + getSpecies() + ", depth=" + getDepth() + ", waterQuantity=" +
+                getWaterQuantity() + "," + " " + "group=" + getGroup().getId() + '}';
+    }
 }

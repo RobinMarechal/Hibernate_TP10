@@ -141,6 +141,7 @@ public class Tank
      * @param id whatever you want, I don't care
      * @return this;
      */
+    @Deprecated
     public Tank setId (int id)
     {
         if (this.id.getValue() == 0) {
@@ -155,6 +156,7 @@ public class Tank
      * @param groups whatever you want, I don't care
      * @return this;
      */
+    @Deprecated
     public Tank setGroups (List<Group> groups)
     {
         // The groups list should only contains one element maximum
@@ -163,5 +165,45 @@ public class Tank
             groups.get(0).setTank(this);
         }
         return this;
+    }
+
+    // -----------------------
+    // Others
+    // -----------------------
+
+    /**
+     * Check if this tank has sufficient capacity to welcome a given {@link Group} instance
+     *
+     * @param group the group
+     * @return true if this tank has sufficient capacity to welcome the {@link Group} instance
+     */
+    public boolean hasSufficientCapacityFor (Group group)
+    {
+        float waterRequired = 0;
+
+        List<Typology> typologies = group.getTypologies();
+
+        for (Typology typology : typologies) {
+            waterRequired += typology.getWaterQuantity() * typology.getNbFish();
+        }
+
+        return this.getCapacity() >= waterRequired;
+    }
+
+    /**
+     * Know if the tank is free
+     * @return true if the tank is free, false if it contains a {@link Group} of fishes
+     */
+    @Transient
+    public boolean isFree()
+    {
+        return this.getGroup() == null;
+    }
+
+
+    @Override
+    public String toString ()
+    {
+        return "Tank{" + "id=" + getId() + ", capacity=" + getCapacity() + ", material=" + getMaterial() + ", groups=" + getGroup().getId() + '}';
     }
 }

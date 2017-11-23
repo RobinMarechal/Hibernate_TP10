@@ -12,6 +12,16 @@ public class Phone
     private StringProperty phoneNumber = new SimpleStringProperty(this, "phoneNumber");
     private ObjectProperty<Owner> owner = new SimpleObjectProperty<>(this, "owner");
 
+    public Phone()
+    {
+    }
+
+    public Phone(String phone)
+    {
+        this();
+        setPhoneNumber(phone);
+    }
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId ()
@@ -48,6 +58,7 @@ public class Phone
      * @param id whatever you want, I don't care
      * @return this
      */
+    @Deprecated
     public Phone setId(int id)
     {
         if(this.id.getValue() == 0)
@@ -72,5 +83,11 @@ public class Phone
     public ObjectProperty<Owner> ownerProperty ()
     {
         return owner;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return "Phone{" + "id=" + getId() + ", phoneNumber=" + getPhoneNumber() + ", owner=" + getOwner().getId() + '}';
     }
 }

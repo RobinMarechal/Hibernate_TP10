@@ -18,11 +18,19 @@ public class Owner
     private ListProperty<Phone> phones = new SimpleListProperty<>(this, "phones");
     private ListProperty<Group> groups = new SimpleListProperty<>(this, "groups");
 
-    public Owner()
+    public Owner ()
     {
         this.phones.setValue(FXCollections.observableArrayList());
         this.groups.setValue(FXCollections.observableArrayList());
     }
+
+    public Owner (String name, String address)
+    {
+        this();
+        setName(name);
+        setAddress(address);
+    }
+
 
     // ------------------------------
     // Getters
@@ -135,6 +143,7 @@ public class Owner
      * @param phones whatever you want
      * @return this
      */
+    @Deprecated
     public Owner setPhones (List<Phone> phones)
     {
         if (this.phones.getValue() == null || this.phones.getValue().isEmpty()) {
@@ -150,6 +159,7 @@ public class Owner
      * @param groups whatever you want
      * @return this
      */
+    @Deprecated
     public Owner setGroups (List<Group> groups)
     {
         if (this.groups.getValue() == null || this.groups.getValue().isEmpty()) {
@@ -165,11 +175,31 @@ public class Owner
      * @param id whatever you want, I don't care
      * @return this
      */
+    @Deprecated
     public Owner setId (int id)
     {
         if (this.id.getValue() == 0) {
             this.id.setValue(id);
         }
         return this;
+    }
+
+    // ---------------------
+    // Others
+    // ---------------------
+
+    public Phone addPhoneNumber(String phoneNumber)
+    {
+        Phone p = new Phone(phoneNumber);
+        this.addPhones(p);
+        return p;
+    }
+
+
+    @Override
+    public String toString ()
+    {
+        return "Owner{" + "id=" + getId() + ", name=" + getName() + ", address=" + getAddress() + ", phones=" + getPhones() + ", groups=" + getGroups().size
+                () + '}';
     }
 }
