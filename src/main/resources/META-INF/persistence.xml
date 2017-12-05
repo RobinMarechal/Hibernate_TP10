@@ -4,20 +4,23 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
     <!-- choisir un nom et RESOURCE_LOCAL pour dire que c'est Java SE -->
-    <persistence-unit name="hibernate_tp10" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="tp_note_vende_marechal" transaction-type="RESOURCE_LOCAL">
         <!--<provider>org.hibernate.ejb.HibernatePersistence</provider>-->
 
         <!-- classes à envoyer dans la bdd pour créer les tables, attention si vous avez des packages -->
-        <class>models.Tank</class>
-        <class>models.Typology</class>
-        <class>models.Phone</class>
-        <class>models.Owner</class>
-        <class>models.Group</class>
+        <class>models.Scene</class>
+        <class>models.Place</class>
+        <class>models.Clap</class>
+        <class>models.ExternalPlace</class>
+        <class>models.Film</class>
+        <class>models.Producer</class>
+        <class>models.Setup</class>
+        <class>models.Theatre</class>
         <properties>
             <!-- driver pour mySql (ne pas modifier) -->
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
             <!-- adresse pour la bdd comme pour jdbc, j'ai appelé ma bdd tp_hibernate ici, créer la bdd vide avant de lancer -->
-            <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/hibernate_tp10"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/tp_note_vende_marechal"/>
             <!-- username de la bdd -->
             <property name="hibernate.connection.username" value="root"/>
             <!-- password de la bdd -->
