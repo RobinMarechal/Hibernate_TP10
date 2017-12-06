@@ -23,6 +23,7 @@ hs_err_pid*
 
 # IntelliJ
 .idea/
+.iml
 
 # Eclipse
 .settings/
@@ -35,6 +36,3 @@ hs_err_pid*
 # compiled sources
 out/
 target/
-
-# Maven tests
-src/test/

@@ -1,7 +1,7 @@
-package models;
+package app.models;
 
 import javafx.beans.property.*;
-import libs.Model;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 

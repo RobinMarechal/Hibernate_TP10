@@ -8,14 +8,14 @@
         <!--<provider>org.hibernate.ejb.HibernatePersistence</provider>-->
 
         <!-- classes à envoyer dans la bdd pour créer les tables, attention si vous avez des packages -->
-        <class>models.Scene</class>
-        <class>models.Place</class>
-        <class>models.Clap</class>
-        <class>models.ExternalPlace</class>
-        <class>models.Film</class>
-        <class>models.Producer</class>
-        <class>models.Setup</class>
-        <class>models.Theatre</class>
+        <class>app.models.Scene</class>
+        <class>app.models.Place</class>
+        <class>app.models.Clap</class>
+        <class>app.models.ExternalPlace</class>
+        <class>app.models.Movie</class>
+        <class>app.models.Producer</class>
+        <class>app.models.Setup</class>
+        <class>app.models.Theatre</class>
         <properties>
             <!-- driver pour mySql (ne pas modifier) -->
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>

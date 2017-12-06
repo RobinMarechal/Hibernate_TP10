@@ -1,8 +1,8 @@
-package models;
+package app.models;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import libs.Model;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +13,18 @@ public class Producer extends Model
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
 
-    private ListProperty<Film> films = new SimpleListProperty<>();
+    private ListProperty<Movie> movies = new SimpleListProperty<>();
+
+    public Producer()
+    {
+        super();
+    }
+
+    public Producer (String name)
+    {
+        this();
+        setName(name);
+    }
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -28,10 +39,10 @@ public class Producer extends Model
         return name.get();
     }
 
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Film.class, mappedBy = "producer")
-    public List<Film> getFilms ()
+    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Movie.class, mappedBy = "producer")
+    public List<Movie> getMovies ()
     {
-        return films.get();
+        return movies.get();
     }
 
     public IntegerProperty idProperty ()
@@ -44,9 +55,9 @@ public class Producer extends Model
         return name;
     }
 
-    public ListProperty<Film> filmsProperty ()
+    public ListProperty<Movie> filmsProperty ()
     {
-        return films;
+        return movies;
     }
 
     public void setId (int id)
@@ -59,8 +70,14 @@ public class Producer extends Model
         this.name.set(name);
     }
 
-    public void setFilms (List<Film> films)
+    public void setMovies (List<Movie> films)
     {
-        this.films.set(FXCollections.observableList(films));
+        this.movies.set(FXCollections.observableList(films));
+    }
+
+    @Override
+    public String toString ()
+    {
+        return getName();
     }
 }

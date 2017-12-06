@@ -1,14 +1,14 @@
-package models;
+package app.models;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import libs.Model;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Film extends Model
+public class Movie extends Model
 {
     private IntegerProperty id = new SimpleIntegerProperty();
     private StringProperty title = new SimpleStringProperty();
@@ -18,8 +18,26 @@ public class Film extends Model
 
     private ListProperty<Scene> scenes = new SimpleListProperty<>();
 
+    public Movie ()
+    {
+        this.scenes.setValue(FXCollections.observableArrayList());
+    }
+
+    public Movie (String title, String director, Producer producer)
+    {
+        this();
+        setTitle(title);
+        setDirector(director);
+        setProducer(producer);
+    }
+
+    public Movie (String title, String director)
+    {
+        this(title, director, null);
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId ()
     {
         return id.get();
@@ -44,7 +62,7 @@ public class Film extends Model
         return producer.get();
     }
 
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Scene.class, mappedBy = "film")
+    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Scene.class, mappedBy = "movies")
     public List<Scene> getScenes ()
     {
         return scenes.get();
@@ -98,5 +116,16 @@ public class Film extends Model
     public void setScenes (List<Scene> scenes)
     {
         this.scenes.set(FXCollections.observableList(scenes));
+    }
+
+    @Override
+    public String toString ()
+    {
+        return "Movie{" + "id=" + getId()
+                + ", title=" + getTitle()
+                + ", director=" + getDirector()
+                + ", producer=" + getProducer()
+                + ", scenes=" + getScenes().size()
+                + '}';
     }
 }

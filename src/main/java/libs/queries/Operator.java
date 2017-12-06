@@ -1,4 +1,4 @@
-package libs;
+package libs.queries;
 
 public enum Operator
 {

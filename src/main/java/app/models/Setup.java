@@ -1,8 +1,8 @@
-package models;
+package app.models;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import libs.Model;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;

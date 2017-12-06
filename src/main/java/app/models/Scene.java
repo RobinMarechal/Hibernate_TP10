@@ -1,9 +1,9 @@
-package models;
+package app.models;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import libs.DayTime;
-import libs.Model;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Scene extends Model
 
     private ObjectProperty<Place> place = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Film> film = new SimpleObjectProperty<>();
+    private ObjectProperty<Movie> movies = new SimpleObjectProperty<>();
 
     private ListProperty<Setup> setups = new SimpleListProperty<>();
 
@@ -48,9 +48,9 @@ public class Scene extends Model
     }
 
     @ManyToOne
-    public Film getFilm ()
+    public Movie getMovies ()
     {
-        return film.get();
+        return movies.get();
     }
 
 
@@ -80,9 +80,9 @@ public class Scene extends Model
         return place;
     }
 
-    public ObjectProperty<Film> filmProperty ()
+    public ObjectProperty<Movie> filmProperty ()
     {
-        return film;
+        return movies;
     }
 
     public ListProperty<Setup> setupsProperty ()
@@ -110,9 +110,9 @@ public class Scene extends Model
         this.place.set(place);
     }
 
-    public void setFilm (Film film)
+    public void setMovies (Movie film)
     {
-        this.film.set(film);
+        this.movies.set(film);
     }
 
     public void setSetups (List<Setup> setups)
