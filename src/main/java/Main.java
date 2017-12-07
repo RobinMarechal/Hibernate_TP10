@@ -55,9 +55,9 @@ public class Main extends Application
         em.getTransaction().begin();
 
 
-        Movie movie  = new Movie("Bonsoir", "Nous");
-        Movie movie1 = new Movie("Salut", "Lui");
-        Movie movie2 = new Movie("Bonjour", "Moi");
+        Movie    movie    = new Movie("Bonsoir", "Nous");
+        Movie    movie1   = new Movie("Salut", "Lui");
+        Movie    movie2   = new Movie("Bonjour", "Moi");
         Producer producer = new Producer("John Doe");
 
         movie.setProducer(producer);

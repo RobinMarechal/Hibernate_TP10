@@ -1,122 +1,112 @@
 package app.models;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import libs.DayTime;
-import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Scene extends Model
+public class Scene
 {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private StringProperty description = new SimpleStringProperty();
-
-    private ObjectProperty<DayTime> daytime = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Place> place = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Movie> movies = new SimpleObjectProperty<>();
-
-    private ListProperty<Setup> setups = new SimpleListProperty<>();
-
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Basic
+    private String description;
+
+    @Basic
+    private DayTime dayTime;
+
+    @ManyToOne (optional = false)
+    private Movie movie;
+
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scene")
+    private List<Setup> setups;
+
+    @ManyToOne (cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    private Place place;
+
+    public Scene ()
+    {
+    }
+
+    public Scene (Movie movie)
+    {
+        this();
+        this.movie = movie;
+    }
+
+    public Scene (Movie movie, Place place)
+    {
+        this(movie);
+        this.place = place;
+    }
+
+    public Scene (Movie movie, Place place, DayTime dayTime)
+    {
+        this(movie, place);
+        this.place = place;
+    }
+
+
+    public Scene (Movie movie, Place place, DayTime dayTime, String description)
+    {
+        this(movie, place, dayTime);
+        this.description = description;
+    }
+
     public int getId ()
-    {
-        return id.get();
-    }
-
-    @Column
-    public String getDescription ()
-    {
-        return description.get();
-    }
-
-    @Column
-    public DayTime getDaytime ()
-    {
-        return daytime.get();
-    }
-
-    @ManyToOne
-    public Place getPlace ()
-    {
-        return place.get();
-    }
-
-    @ManyToOne
-    public Movie getMovies ()
-    {
-        return movies.get();
-    }
-
-
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Setup.class, mappedBy = "scene")
-    public List<Setup> getSetups ()
-    {
-        return setups.get();
-    }
-
-    public IntegerProperty idProperty ()
     {
         return id;
     }
 
-    public StringProperty descriptionProperty ()
+    public String getDescription ()
     {
         return description;
     }
 
-    public ObjectProperty<DayTime> daytimeProperty ()
+    public DayTime getDayTime ()
     {
-        return daytime;
+        return dayTime;
     }
 
-    public ObjectProperty<Place> placeProperty ()
+    public Movie getMovie ()
     {
-        return place;
+        return movie;
     }
 
-    public ObjectProperty<Movie> filmProperty ()
-    {
-        return movies;
-    }
-
-    public ListProperty<Setup> setupsProperty ()
+    public List<Setup> getSetups ()
     {
         return setups;
     }
 
-    public void setId (int id)
+    public Place getPlace ()
     {
-        this.id.set(id);
+        return place;
     }
 
     public void setDescription (String description)
     {
-        this.description.set(description);
+        this.description = description;
     }
 
-    public void setDaytime (DayTime daytime)
+    public void setDayTime (DayTime dayTime)
     {
-        this.daytime.set(daytime);
+        this.dayTime = dayTime;
+    }
+
+    public void setMovie (Movie movie)
+    {
+        // TODO
     }
 
     public void setPlace (Place place)
     {
-        this.place.set(place);
+        // TODO
     }
 
-    public void setMovies (Movie film)
+    public void addSetups(Setup... setup)
     {
-        this.movies.set(film);
-    }
-
-    public void setSetups (List<Setup> setups)
-    {
-        this.setups.set(FXCollections.observableList(setups));
+        // TODO
     }
 }

@@ -1,7 +1,5 @@
 package app.views.films;
 
-import app.models.Movie;
-import app.models.Producer;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import libs.mvc.Controller;

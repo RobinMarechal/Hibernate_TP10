@@ -1,84 +1,71 @@
 package app.models;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import libs.mvc.Model;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Setup extends Model
+public class Setup
 {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private StringProperty description = new SimpleStringProperty();
-
-    private ObjectProperty<Scene> scene = new SimpleObjectProperty<>();
-
-    private ListProperty<Clap> claps = new SimpleListProperty<>();
-
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    public int getId ()
+    private int id;
+
+    @Basic
+    private String description;
+
+    @ManyToOne (cascade = CascadeType.DETACH, fetch = FetchType.EAGER, optional = false)
+    private Scene scene;
+
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "setup")
+    private List<Clap> claps;
+
+    public Setup ()
     {
-        return id.get();
     }
 
-    @Column
-    public String getDescription ()
+    public Setup (Scene scene)
     {
-        return description.get();
+        this();
+        this.scene = scene;
     }
 
-    @ManyToOne
-    public Scene getScene ()
+    public Setup (Scene scene, String description)
     {
-        return scene.get();
-    }
-
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Clap.class, mappedBy = "setup")
-    public List<Clap> getClaps ()
-    {
-        return claps.get();
-    }
-
-    public IntegerProperty idProperty ()
-    {
-        return id;
-    }
-
-    public StringProperty descriptionProperty ()
-    {
-        return description;
-    }
-
-    public ObjectProperty<Scene> sceneProperty ()
-    {
-        return scene;
-    }
-
-    public ListProperty<Clap> clapsProperty ()
-    {
-        return claps;
-    }
-
-    public void setId (int id)
-    {
-        this.id.set(id);
+        this(scene);
+        this.description = description;
     }
 
     public void setDescription (String description)
     {
-        this.description.set(description);
+        this.description = description;
+    }
+
+    public int getId ()
+    {
+        return id;
+    }
+
+    public String getDescription ()
+    {
+        return description;
+    }
+
+    public Scene getScene ()
+    {
+        return scene;
+    }
+
+    public List<Clap> getClaps ()
+    {
+        return claps;
     }
 
     public void setScene (Scene scene)
     {
-        this.scene.set(scene);
+        // TODO
     }
 
-    public void setClaps (List<Clap> claps)
+    public void addClaps (Clap... clap)
     {
-        this.claps.set(FXCollections.observableList(claps));
+        // TODO
     }
 }

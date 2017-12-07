@@ -1,105 +1,93 @@
 package app.models;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import libs.mvc.Model;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Place extends Model
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Place
 {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private StringProperty title = new SimpleStringProperty();
-    private StringProperty address = new SimpleStringProperty();
-    private StringProperty description = new SimpleStringProperty();
-
-
-    private ListProperty<Scene> scenes = new SimpleListProperty<>();
-
-
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Basic
+    private String name;
+
+    @Basic
+    private String address;
+
+    @Basic
+    private String description;
+
+    @OneToMany (cascade = CascadeType.DETACH, mappedBy = "place")
+    private List<Scene> scenes;
+
+    public Place ()
+    {
+    }
+
+    public Place (String name)
+    {
+        this();
+        this.name = name;
+    }
+
+    public Place (String name, String address)
+    {
+        this(name);
+        this.address = address;
+    }
+
+    public Place (String name, String address, String description)
+    {
+        this(name, address);
+        this.description = description;
+    }
+
     public int getId ()
-    {
-        return id.get();
-    }
-
-    @Column
-    public String getTitle ()
-    {
-        return title.get();
-    }
-
-
-    @Column
-    public String getAddress ()
-    {
-        return address.get();
-    }
-
-
-    @Column
-    public String getDescription ()
-    {
-        return description.get();
-    }
-
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Scene.class, mappedBy = "place")
-    public List<Scene> getScenes ()
-    {
-        return scenes.get();
-    }
-
-    public IntegerProperty idProperty ()
     {
         return id;
     }
 
-    public StringProperty titleProperty ()
+
+    public String getName ()
     {
-        return title;
+        return name;
     }
 
-    public StringProperty addressProperty ()
+    public String getAddress ()
     {
         return address;
     }
 
-    public StringProperty descriptionProperty ()
+    public String getDescription ()
     {
         return description;
     }
 
-    public ListProperty<Scene> setupsProperty ()
+    public List<Scene> getScenes ()
     {
         return scenes;
     }
 
-    public void setId (int id)
+    public void setName (String name)
     {
-        this.id.set(id);
-    }
-
-    public void setTitle (String title)
-    {
-        this.title.set(title);
+        this.name = name;
     }
 
     public void setAddress (String address)
     {
-        this.address.set(address);
+        this.address = address;
     }
 
     public void setDescription (String description)
     {
-        this.description.set(description);
+        this.description = description;
     }
 
-    public void setScenes (List<Scene> setups)
+    public void addScenes (Scene... scenes)
     {
-        this.scenes.set(FXCollections.observableList(setups));
+        // TODO
     }
 }

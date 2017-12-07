@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.models.Movie;
 import app.views.films.AllMoviesView;
 import app.views.films.ShowMovieView;
 import libs.mvc.Controller;

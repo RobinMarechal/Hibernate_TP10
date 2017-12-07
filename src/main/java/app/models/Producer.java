@@ -1,83 +1,53 @@
 package app.models;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import libs.mvc.Model;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Producer extends Model
+public class Producer
 {
-    private IntegerProperty id = new SimpleIntegerProperty();
-    private StringProperty name = new SimpleStringProperty();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    private ListProperty<Movie> movies = new SimpleListProperty<>();
+    @Basic
+    private String name;
 
-    public Producer()
+    @OneToMany (mappedBy = "producer")
+    private List<Movie> movies;
+
+    public Producer ()
     {
-        super();
     }
 
     public Producer (String name)
     {
         this();
-        setName(name);
+        this.name = name;
     }
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     public int getId ()
-    {
-        return id.get();
-    }
-
-    @Column
-    public String getName ()
-    {
-        return name.get();
-    }
-
-    @OneToMany (cascade = CascadeType.DETACH, fetch = FetchType.LAZY, targetEntity = Movie.class, mappedBy = "producer")
-    public List<Movie> getMovies ()
-    {
-        return movies.get();
-    }
-
-    public IntegerProperty idProperty ()
     {
         return id;
     }
 
-    public StringProperty nameProperty ()
+    public String getName ()
     {
         return name;
     }
 
-    public ListProperty<Movie> filmsProperty ()
+    public void setName (String name)
+    {
+        this.name = name;
+    }
+
+    public List<Movie> getMovies ()
     {
         return movies;
     }
 
-    public void setId (int id)
+    public void addMovies(Movie... movies)
     {
-        this.id.set(id);
-    }
-
-    public void setName (String name)
-    {
-        this.name.set(name);
-    }
-
-    public void setMovies (List<Movie> films)
-    {
-        this.movies.set(FXCollections.observableList(films));
-    }
-
-    @Override
-    public String toString ()
-    {
-        return getName();
+        // TODO
     }
 }

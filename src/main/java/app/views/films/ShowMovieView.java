@@ -2,7 +2,6 @@ package app.views.films;
 
 import libs.mvc.Controller;
 import libs.mvc.View;
-import app.models.Movie;
 
 public class ShowMovieView extends View
 {

@@ -16,6 +16,11 @@
         <class>app.models.Producer</class>
         <class>app.models.Setup</class>
         <class>app.models.Theatre</class>
+        <class>app.models.Theatre</class>
+        <class>app.models.ExternalPlace</class>
+        <class>app.models.Setup</class>
+        <class>app.models.Clap</class>
+        <class>app.models.pk.ClapPrimaryKey</class>
         <properties>
             <!-- driver pour mySql (ne pas modifier) -->
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>

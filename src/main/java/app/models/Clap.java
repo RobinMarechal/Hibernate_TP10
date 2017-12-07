@@ -1,67 +1,56 @@
 package app.models;
 
-import javafx.beans.property.*;
-import libs.mvc.Model;
+import app.models.pk.ClapPrimaryKey;
 
 import javax.persistence.*;
+import java.time.Duration;
 
 @Entity
-public class Clap extends Model
+public class Clap
 {
-    private IntegerProperty id    = new SimpleIntegerProperty();
 
-    private IntegerProperty numero = new SimpleIntegerProperty();
+    @EmbeddedId
+    private ClapPrimaryKey primaryKey;
 
-    private StringProperty  description = new SimpleStringProperty();
+    @Basic
+    private Duration duration;
 
-    private ObjectProperty<Setup> setup = new SimpleObjectProperty<>();
+    @ManyToOne (cascade = CascadeType.DETACH)
+    private Setup setup;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId ()
+    public Clap ()
     {
-        return id.get();
     }
 
-    @ManyToOne
+    public Clap (Duration duration, Setup setup)
+    {
+        this();
+        this.duration = duration;
+        this.setup = setup;
+    }
+
+    public ClapPrimaryKey getPrimaryKey ()
+    {
+        return primaryKey;
+    }
+
+    public Duration getDuration ()
+    {
+        return duration;
+    }
+
+    public void setDuration (Duration duration)
+    {
+        this.duration = duration;
+    }
+
     public Setup getSetup ()
-    {
-        return setup.get();
-    }
-
-    @Column
-    public String getDescription ()
-    {
-        return description.get();
-    }
-
-    public IntegerProperty idProperty ()
-    {
-        return id;
-    }
-
-    public StringProperty descriptionProperty ()
-    {
-        return description;
-    }
-
-    public ObjectProperty<Setup> setupProperty ()
     {
         return setup;
     }
 
-    public void setId (int id)
-    {
-        this.id.set(id);
-    }
-
-    public void setDescription (String description)
-    {
-        this.description.set(description);
-    }
-
     public void setSetup (Setup setup)
     {
-        this.setup.set(setup);
+        // TODO
     }
 }
