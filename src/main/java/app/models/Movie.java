@@ -7,7 +7,7 @@ import java.util.List;
 public class Movie
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
 
     @Basic
@@ -76,7 +76,7 @@ public class Movie
 
     public void setProducer (Producer producer)
     {
-       // TODO
+        // TODO
     }
 
     public List<Scene> getScenes ()
@@ -84,7 +84,7 @@ public class Movie
         return scenes;
     }
 
-    public void addScenes(Scene... scenes)
+    public void addScenes (Scene... scenes)
     {
         // TODO
     }
