@@ -3,6 +3,7 @@ package app.models;
 import libs.mvc.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,7 @@ public abstract class Place extends Model<Integer>
 
     public Place ()
     {
+        scenes = new ArrayList<>();
     }
 
     public Place (String name)

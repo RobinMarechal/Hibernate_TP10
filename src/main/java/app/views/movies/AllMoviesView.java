@@ -55,10 +55,10 @@ public class AllMoviesView extends View
         directorColumn.setCellValueFactory(new PropertyValueFactory<>("director"));
         producerColumn.setCellValueFactory(new PropertyValueFactory<>("producer"));
 
-        idColumn.prepareCellFactory();
-        titleColumn.prepareCellFactory();
-        directorColumn.prepareCellFactory();
-        producerColumn.prepareCellFactory();
+        idColumn.prepareEventHandler();
+        titleColumn.prepareEventHandler();
+        directorColumn.prepareEventHandler();
+        producerColumn.prepareEventHandler();
     }
 
     public void setUpColumnTitles ()

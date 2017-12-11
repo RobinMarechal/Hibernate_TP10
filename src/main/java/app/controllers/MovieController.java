@@ -7,10 +7,9 @@ import libs.mvc.Controller;
 import libs.mvc.Home;
 import libs.mvc.View;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class MovieController extends Controller implements Home
+public class MovieController extends Controller<Integer> implements Home
 {
     public MovieController ()
     {
@@ -24,7 +23,7 @@ public class MovieController extends Controller implements Home
     }
 
     @Override
-    public void show (Serializable id)
+    public void show (Integer id)
     {
         Movie Movie = em.find(Movie.class, id);
         View  view = new ShowMovieView(this, Movie);

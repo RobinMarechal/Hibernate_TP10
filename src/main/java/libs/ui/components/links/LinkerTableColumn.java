@@ -1,5 +1,6 @@
 package libs.ui.components.links;
 
+import app.models.pk.ClapPrimaryKey;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -8,8 +9,7 @@ import libs.mvc.Model;
 
 import java.io.Serializable;
 
-public class LinkerTableColumn<ModelType extends Model, FieldType, IDType extends Serializable> extends TableColumn<ModelType, FieldType> implements
-        Linker<IDType>
+public class LinkerTableColumn<ModelType extends Model, FieldType, PKType extends Serializable> extends TableColumn<ModelType, FieldType> implements ControllerLinker<PKType>
 {
     private RedirectType redirectType = RedirectType.SHOW_ONE;
     private Controller targetController;
@@ -22,8 +22,14 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, IDType extend
         this.getStyleClass().add("link");
     }
 
+    public LinkerTableColumn (Controller targetController, RedirectType redirectType)
+    {
+        this(targetController);
+        this.redirectType = redirectType;
+    }
+
     @Override
-    public void prepareCellFactory ()
+    public void prepareEventHandler ()
     {
         this.setCellFactory(tableCell -> {
             TableCell<ModelType, FieldType> cell = new TableCell<ModelType, FieldType>()
@@ -44,10 +50,10 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, IDType extend
 
                         if (tableRow != null) {
                             ModelType model = ((ModelType) tableRow.getItem());
-                            this.setOnMouseClicked(event -> redirect(model.getId()));
+                            this.setOnMouseClicked(event -> redirect((PKType) model.getId()));
                         }
                         else {
-                            this.setOnMouseClicked(event -> redirect(-1));
+                            this.setOnMouseClicked(event -> redirect(null));
                         }
                     }
                 }
@@ -55,12 +61,6 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, IDType extend
 
             return cell;
         });
-    }
-
-    public LinkerTableColumn (Controller targetController, RedirectType redirectType)
-    {
-        this(targetController);
-        this.redirectType = redirectType;
     }
 
     public RedirectType getRedirectType ()
@@ -84,9 +84,17 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, IDType extend
     }
 
     @Override
-    public void redirect (Serializable id)
+    public void redirect (PKType id)
     {
+        if (id == null) {
+            return;
+        }
+
         if (id instanceof Integer && (Integer) id == -1) {
+            return;
+        }
+
+        if (id instanceof ClapPrimaryKey && ((ClapPrimaryKey) id).getSetupId() == 0) {
             return;
         }
 

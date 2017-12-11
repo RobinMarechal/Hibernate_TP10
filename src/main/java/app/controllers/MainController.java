@@ -3,9 +3,7 @@ package app.controllers;
 import libs.mvc.Controller;
 import libs.mvc.Home;
 
-import java.io.Serializable;
-
-public class MainController extends Controller implements Home
+public class MainController extends Controller<Integer> implements Home
 {
     public MainController ()
     {
@@ -19,7 +17,7 @@ public class MainController extends Controller implements Home
     }
 
     @Override
-    public void show (Serializable id)
+    public void show (Integer id)
     {
 
     }

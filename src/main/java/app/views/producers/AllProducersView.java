@@ -68,8 +68,8 @@ public class AllProducersView extends View
             }
         });
 
-        idColumn.prepareCellFactory();
-        nameColumn.prepareCellFactory();
+        idColumn.prepareEventHandler();
+        nameColumn.prepareEventHandler();
     }
 
     public void setUpColumnTitles ()

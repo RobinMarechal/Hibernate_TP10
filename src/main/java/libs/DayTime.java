@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public enum DayTime implements Serializable
 {
-    NIGHT(1),
-    DAY(0);
+    NIGHT("night"),
+    DAY("day");
 
-    private int value;
+    private String value;
 
-    DayTime (int value)
+    DayTime (String value)
     {
         this.value = value;
     }
@@ -17,6 +17,6 @@ public enum DayTime implements Serializable
     @Override
     public String toString ()
     {
-        return this.value + "";
+        return this.value;
     }
 }

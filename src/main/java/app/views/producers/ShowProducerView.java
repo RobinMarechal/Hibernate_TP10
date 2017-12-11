@@ -6,6 +6,7 @@ import app.models.Movie;
 import app.models.Producer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +28,9 @@ public class ShowProducerView extends View
     private Label nbMoviesLabel = new Label();
 
     private TableView<Movie> moviesTable = new TableView<>();
-    private LinkerTableColumn<Movie, Integer, Integer> idColumn ;
-    private LinkerTableColumn<Movie, String, Integer> titleColumn ;
-    private LinkerTableColumn<Movie, String, Integer> directorColumn ;
+    private LinkerTableColumn<Movie, Integer, Integer> idColumn;
+    private LinkerTableColumn<Movie, String, Integer> titleColumn;
+    private TableColumn<Movie, String> directorColumn;
 
     public ShowProducerView (ProducerController controller, Producer producer)
     {
@@ -38,7 +39,7 @@ public class ShowProducerView extends View
 
         idColumn = new LinkerTableColumn<>(movieController);
         titleColumn = new LinkerTableColumn<>(movieController);
-        directorColumn = new LinkerTableColumn<>(movieController);
+        directorColumn = new TableColumn<>();
 
         setup();
         display();
@@ -63,21 +64,24 @@ public class ShowProducerView extends View
         borderPane.setBottom(moviesTable);
     }
 
-    private void setupColumnHeaders()
+    private void setupColumnHeaders ()
     {
         idColumn.setText("ID");
         titleColumn.setText("Title");
         directorColumn.setText("Director");
     }
 
-    private void setupColumnFactories()
+    private void setupColumnFactories ()
     {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         directorColumn.setCellValueFactory(new PropertyValueFactory<>("director"));
+
+        idColumn.prepareEventHandler();
+        titleColumn.prepareEventHandler();
     }
 
-    private void setupColumnDimension()
+    private void setupColumnDimension ()
     {
         setSizeOfColumnInTable(idColumn, moviesTable, 15);
         setSizeOfColumnInTable(titleColumn, moviesTable, 35);
@@ -88,7 +92,7 @@ public class ShowProducerView extends View
     {
         nameLabel.setText(producer.getName());
         idLabel.setText("ID: " + producer.getId());
-        nbMoviesLabel.setText("Movies: " + producer.getMovies().size());
+        nbMoviesLabel.setText("Movies (" + producer.getMovies().size() + "): ");
 
         vbox.getChildren().addAll(nameLabel, idLabel, nbMoviesLabel);
 

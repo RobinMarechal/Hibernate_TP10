@@ -6,9 +6,8 @@ import libs.ui.template.Template;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 
-public abstract class Controller
+public abstract class Controller<PKType extends Serializable>
 {
-
     protected EntityManager em;
 
     public Controller()
@@ -16,7 +15,7 @@ public abstract class Controller
         this.em = EntityManagerHolder.getEntityManager();
     }
 
-    public abstract void show (Serializable id);
+    public abstract void show (PKType id);
 
     public abstract void showAll();
 

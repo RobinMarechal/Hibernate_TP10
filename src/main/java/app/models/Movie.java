@@ -3,6 +3,7 @@ package app.models;
 import libs.mvc.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,7 @@ public class Movie extends Model<Integer>
 
     public Movie ()
     {
+        scenes = new ArrayList<>();
     }
 
     public Movie (String title, String director, Producer producer)

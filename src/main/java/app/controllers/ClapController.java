@@ -1,10 +1,9 @@
 package app.controllers;
 
+import app.models.pk.ClapPrimaryKey;
 import libs.mvc.Controller;
 
-import java.io.Serializable;
-
-public class ClapController extends Controller
+public class ClapController extends Controller<ClapPrimaryKey>
 {
 
     public ClapController ()
@@ -13,7 +12,7 @@ public class ClapController extends Controller
     }
 
     @Override
-    public void show (Serializable id)
+    public void show (ClapPrimaryKey id)
     {
 
     }

@@ -1,6 +1,7 @@
 package libs.ui.template;
 
 import app.controllers.MovieController;
+import app.controllers.PlaceController;
 import app.controllers.ProducerController;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -74,6 +75,9 @@ public class Template extends Scene
         //        navbarItems.add(new NavbarItem("Home", new MainController()));
         navbarItems.add(new NavbarItem("Movies", new MovieController()));
         navbarItems.add(new NavbarItem("Producers", new ProducerController()));
+        navbarItems.add(new NavbarItem("Places", new PlaceController()));
+
+        navbarItems.sort();
 
         navbar.getChildren().addAll(navbarItems);
 

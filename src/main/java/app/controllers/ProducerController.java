@@ -7,10 +7,9 @@ import libs.mvc.Controller;
 import libs.mvc.Home;
 import libs.mvc.View;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class ProducerController extends Controller implements Home
+public class ProducerController extends Controller<Integer> implements Home
 {
 
     public ProducerController ()
@@ -25,7 +24,7 @@ public class ProducerController extends Controller implements Home
     }
 
     @Override
-    public void show (Serializable id)
+    public void show (Integer id)
     {
         Producer producer = em.find(Producer.class, id);
         View  view  = new ShowProducerView(this, producer);

@@ -1,9 +1,9 @@
 package libs.mvc;
 
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import libs.ui.template.Template;
 
 public abstract class View extends AnchorPane
 {
@@ -24,7 +24,7 @@ public abstract class View extends AnchorPane
         setAnchorOfComponent(component, 0, 0, 0, 0);
     }
 
-    protected void setAnchorOfComponent(Region component, double top, double right, double bottom, double left)
+    protected void setAnchorOfComponent (Region component, double top, double right, double bottom, double left)
     {
         AnchorPane.setTopAnchor(component, top);
         AnchorPane.setBottomAnchor(component, bottom);
@@ -32,9 +32,10 @@ public abstract class View extends AnchorPane
         AnchorPane.setRightAnchor(component, right);
     }
 
-    protected void setSizeOfColumnInTable (TableColumn column, TableView owner, double percentageWidth)
+    protected void setSizeOfColumnInTable (TableColumn column, Region container, double percentageWidth)
     {
-        column.setPrefWidth(owner.getWidth() * percentageWidth / 100);
+        //        column.setPrefWidth(container.getWidth() * percentageWidth / 100);
+        column.setPrefWidth(Template.CONTENT_WIDTH * percentageWidth / 100);
     }
 
     public void addComponents (Region... regions)

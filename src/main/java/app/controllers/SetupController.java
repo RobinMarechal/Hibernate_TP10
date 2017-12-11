@@ -2,9 +2,7 @@ package app.controllers;
 
 import libs.mvc.Controller;
 
-import java.io.Serializable;
-
-public class SetupController extends Controller
+public class SetupController extends Controller<Integer>
 {
     public SetupController ()
     {
@@ -12,7 +10,7 @@ public class SetupController extends Controller
     }
 
     @Override
-    public void show (Serializable id)
+    public void show (Integer id)
     {
 
     }

@@ -4,6 +4,7 @@ import libs.DayTime;
 import libs.mvc.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,7 @@ public class Scene extends Model<Integer>
 
     public Scene ()
     {
+        setups = new ArrayList<>();
     }
 
     public Scene (Movie movie)
