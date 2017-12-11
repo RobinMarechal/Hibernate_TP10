@@ -1,13 +1,17 @@
 package app.models;
 
+import libs.mvc.Model;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
-public class Producer
+public class Producer extends Model<Integer>
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
 
     @Basic
@@ -18,6 +22,7 @@ public class Producer
 
     public Producer ()
     {
+        this.movies = new ArrayList<>();
     }
 
     public Producer (String name)
@@ -26,7 +31,8 @@ public class Producer
         this.name = name;
     }
 
-    public int getId ()
+    @Override
+    public Integer getId ()
     {
         return id;
     }
@@ -46,8 +52,14 @@ public class Producer
         return movies;
     }
 
-    public void addMovies(Movie... movies)
+    void addMovies (Movie... movies)
     {
-        // TODO
+        this.movies.addAll(Arrays.asList(movies));
+    }
+
+    @Override
+    public String toString ()
+    {
+        return this.name;
     }
 }

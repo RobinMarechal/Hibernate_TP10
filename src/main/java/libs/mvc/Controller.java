@@ -1,8 +1,10 @@
 package libs.mvc;
 
 import libs.EntityManagerHolder;
+import libs.ui.template.Template;
 
 import javax.persistence.EntityManager;
+import java.io.Serializable;
 
 public abstract class Controller
 {
@@ -14,9 +16,12 @@ public abstract class Controller
         this.em = EntityManagerHolder.getEntityManager();
     }
 
-    public abstract void home();
-
-    public abstract void show(int id);
+    public abstract void show (Serializable id);
 
     public abstract void showAll();
+
+    public void setTemplateView (View view)
+    {
+        Template.getInstance().setView(view);
+    }
 }

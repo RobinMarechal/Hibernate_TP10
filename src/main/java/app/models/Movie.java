@@ -1,14 +1,16 @@
 package app.models;
 
+import libs.mvc.Model;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Movie
+public class Movie extends Model<Integer>
 {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Basic
     private String title;
@@ -44,7 +46,8 @@ public class Movie
         this.title = title;
     }
 
-    public int getId ()
+    @Override
+    public Integer getId ()
     {
         return id;
     }
@@ -77,6 +80,11 @@ public class Movie
     public void setProducer (Producer producer)
     {
         // TODO
+        if(producer != null)
+        {
+            this.producer = producer;
+            producer.addMovies(this);
+        }
     }
 
     public List<Scene> getScenes ()

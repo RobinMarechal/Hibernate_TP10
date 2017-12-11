@@ -1,8 +1,11 @@
 package app.controllers;
 
 import libs.mvc.Controller;
+import libs.mvc.Home;
 
-public class MainController extends Controller
+import java.io.Serializable;
+
+public class MainController extends Controller implements Home
 {
     public MainController ()
     {
@@ -16,7 +19,7 @@ public class MainController extends Controller
     }
 
     @Override
-    public void show (int id)
+    public void show (Serializable id)
     {
 
     }

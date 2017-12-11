@@ -1,7 +1,7 @@
 package libs.ui.template.nav;
 
 import javafx.scene.control.Button;
-import libs.mvc.Controller;
+import libs.mvc.Home;
 import libs.ui.template.Template;
 
 /**
@@ -10,7 +10,7 @@ import libs.ui.template.Template;
  */
 public class NavbarItem extends Button
 {
-    private Controller controller;
+    private Home controller;
 
     /**
      * Creates a button with an empty string for its label.
@@ -25,7 +25,7 @@ public class NavbarItem extends Button
      *
      * @param text A text string for its label.
      */
-    public NavbarItem (String text, Controller controller)
+    public NavbarItem (String text, Home controller)
     {
         super(text);
         this.controller = controller;
@@ -36,12 +36,12 @@ public class NavbarItem extends Button
         prepareClickAction();
     }
 
-    public Controller getController ()
+    public Home getController ()
     {
         return controller;
     }
 
-    public void setController (Controller controller)
+    public void setController (Home controller)
     {
         this.controller = controller;
         prepareClickAction();

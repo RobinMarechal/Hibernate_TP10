@@ -1,12 +1,13 @@
 package app.models;
 
 import libs.DayTime;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Scene
+public class Scene extends Model<Integer>
 {
     @Id
     private int id;
@@ -55,7 +56,8 @@ public class Scene
         this.description = description;
     }
 
-    public int getId ()
+    @Override
+    public Integer getId ()
     {
         return id;
     }

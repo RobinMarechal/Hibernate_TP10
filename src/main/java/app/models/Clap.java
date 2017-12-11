@@ -1,14 +1,14 @@
 package app.models;
 
 import app.models.pk.ClapPrimaryKey;
+import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.time.Duration;
 
 @Entity
-public class Clap
+public class Clap extends Model<ClapPrimaryKey>
 {
-
     @EmbeddedId
     private ClapPrimaryKey primaryKey;
 
@@ -52,5 +52,12 @@ public class Clap
     public void setSetup (Setup setup)
     {
         // TODO
+    }
+
+    @Transient
+    @Override
+    public ClapPrimaryKey getId ()
+    {
+        return getPrimaryKey();
     }
 }

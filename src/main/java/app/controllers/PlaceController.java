@@ -2,6 +2,8 @@ package app.controllers;
 
 import libs.mvc.Controller;
 
+import java.io.Serializable;
+
 /**
  * Controls both Theatre and ExternalPlace classes
  */
@@ -13,13 +15,7 @@ public class PlaceController extends Controller
     }
 
     @Override
-    public void home ()
-    {
-
-    }
-
-    @Override
-    public void show (int id)
+    public void show (Serializable id)
     {
 
     }

@@ -10,10 +10,10 @@ import java.io.Serializable;
 public class ClapPrimaryKey implements Serializable
 {
     @Basic
-    private int number = 1;
+    private int number;
 
     @Basic
-    private int setupId = 1;
+    private int setupId;
 
     public ClapPrimaryKey (int number, int setupId)
     {

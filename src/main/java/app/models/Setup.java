@@ -1,10 +1,12 @@
 package app.models;
 
+import libs.mvc.Model;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Setup
+public class Setup extends Model<Integer>
 {
     @Id
     private int id;
@@ -39,7 +41,8 @@ public class Setup
         this.description = description;
     }
 
-    public int getId ()
+    @Override
+    public Integer getId ()
     {
         return id;
     }

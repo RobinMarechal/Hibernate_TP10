@@ -1,7 +1,9 @@
 package libs.mvc;
 
-import javafx.scene.control.Control;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 
 public abstract class View extends AnchorPane
 {
@@ -10,17 +12,33 @@ public abstract class View extends AnchorPane
     public View (Controller controller)
     {
         this.controller = controller;
+        this.getStyleClass().addAll("bg-almost-white");
     }
 
     protected abstract void setup ();
 
-    public abstract void display ();
+    protected abstract void display ();
 
-    public void fitComponentToParent (Control component)
+    protected void fitComponentToParent (Region component)
     {
-        AnchorPane.setTopAnchor(component, 0d);
-        AnchorPane.setBottomAnchor(component, 0d);
-        AnchorPane.setLeftAnchor(component, 0d);
-        AnchorPane.setRightAnchor(component, 0d);
+        setAnchorOfComponent(component, 0, 0, 0, 0);
+    }
+
+    protected void setAnchorOfComponent(Region component, double top, double right, double bottom, double left)
+    {
+        AnchorPane.setTopAnchor(component, top);
+        AnchorPane.setBottomAnchor(component, bottom);
+        AnchorPane.setLeftAnchor(component, left);
+        AnchorPane.setRightAnchor(component, right);
+    }
+
+    protected void setSizeOfColumnInTable (TableColumn column, TableView owner, double percentageWidth)
+    {
+        column.setPrefWidth(owner.getWidth() * percentageWidth / 100);
+    }
+
+    public void addComponents (Region... regions)
+    {
+        this.getChildren().addAll(regions);
     }
 }

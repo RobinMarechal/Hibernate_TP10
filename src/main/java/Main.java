@@ -5,8 +5,6 @@
  */
 
 import app.controllers.MovieController;
-import app.models.Movie;
-import app.models.Producer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import libs.EntityManagerHolder;
@@ -18,9 +16,6 @@ import javax.persistence.Persistence;
 
 public class Main extends Application
 {
-    MovieController tankController;
-
-
     public static void main (String[] args)
     {
         launch(args);
@@ -52,22 +47,24 @@ public class Main extends Application
     public void testData ()
     {
         EntityManager em = EntityManagerHolder.getEntityManager();
-        em.getTransaction().begin();
 
 
-        Movie    movie    = new Movie("Bonsoir", "Nous");
-        Movie    movie1   = new Movie("Salut", "Lui");
-        Movie    movie2   = new Movie("Bonjour", "Moi");
-        Producer producer = new Producer("John Doe");
-
-        movie.setProducer(producer);
-
-        em.persist(producer);
-        em.persist(movie);
-        em.persist(movie1);
-        em.persist(movie2);
-
-        em.getTransaction().commit();
+//        Movie    movie    = new Movie("Bonsoir", "Nous");
+//        Movie    movie1   = new Movie("Salut", "Lui");
+//        Movie    movie2   = new Movie("Bonjour", "Moi");
+//        Producer producer = new Producer("John Doe");
+//
+//        movie.setProducer(producer);
+//
+//
+//        em.getTransaction().begin();
+//
+//        em.persist(producer);
+//        em.persist(movie);
+//        em.persist(movie1);
+//        em.persist(movie2);
+//
+//        em.getTransaction().commit();
     }
 
     private void run ()

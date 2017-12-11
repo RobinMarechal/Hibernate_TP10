@@ -37,7 +37,7 @@
             <!-- permet de montrer les commandes sql dans la console (ne pas modifier) -->
             <property name="hibernate.show_sql" value="true"/>
             <!-- permet de créer les tables de la bdd au début (ne pas modifier) -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
         </properties>
     </persistence-unit>
 </persistence>

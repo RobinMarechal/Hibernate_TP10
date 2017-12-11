@@ -1,14 +1,16 @@
 package app.controllers;
 
-import app.views.films.AllMoviesView;
-import app.views.films.ShowMovieView;
+import app.models.Movie;
+import app.views.movies.AllMoviesView;
+import app.views.movies.ShowMovieView;
 import libs.mvc.Controller;
+import libs.mvc.Home;
 import libs.mvc.View;
-import libs.ui.template.Template;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MovieController extends Controller
+public class MovieController extends Controller implements Home
 {
     public MovieController ()
     {
@@ -22,22 +24,18 @@ public class MovieController extends Controller
     }
 
     @Override
-    public void show (int id)
+    public void show (Serializable id)
     {
-        Movie film = em.find(Movie.class, id);
-        View  view = new ShowMovieView(this, film);
-        view.display();
+        Movie Movie = em.find(Movie.class, id);
+        View  view = new ShowMovieView(this, Movie);
+        this.setTemplateView(view);
     }
 
     @Override
     public void showAll ()
     {
         List<Movie> movies = (List<Movie>) em.createQuery("FROM Movie").getResultList();
-
-        //        for (Movie movie : movies) {
-        //            System.out.println(movie);
-        //        }
-
-        Template.getInstance().setView(new AllMoviesView(this, movies));
+        AllMoviesView view = new AllMoviesView(this, movies);
+        this.setTemplateView(view);
     }
 }

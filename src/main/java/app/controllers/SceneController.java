@@ -2,6 +2,8 @@ package app.controllers;
 
 import libs.mvc.Controller;
 
+import java.io.Serializable;
+
 public class SceneController extends Controller
 {
 
@@ -11,13 +13,7 @@ public class SceneController extends Controller
     }
 
     @Override
-    public void home ()
-    {
-
-    }
-
-    @Override
-    public void show (int id)
+    public void show (Serializable id)
     {
 
     }

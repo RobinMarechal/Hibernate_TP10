@@ -1,15 +1,17 @@
 package app.models;
 
+import libs.mvc.Model;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Place
+public abstract class Place extends Model<Integer>
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Basic
     private String name;
@@ -45,7 +47,8 @@ public class Place
         this.description = description;
     }
 
-    public int getId ()
+    @Override
+    public Integer getId ()
     {
         return id;
     }
