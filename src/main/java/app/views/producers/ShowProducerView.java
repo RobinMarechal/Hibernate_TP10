@@ -113,7 +113,7 @@ public class ShowProducerView extends View<ProducerController>
     {
         nameLabel.setText(producer.getName());
         idLabel.setText("ID: " + producer.getId());
-        nbMoviesLabel.setText("Movies (" + producer.getMovies().size() + "): ");
+        nbMoviesLabel.setText("Movies:");
 
         vbox.getChildren().addAll(nameLabel/*, idLabel*/, nbMoviesLabel);
 

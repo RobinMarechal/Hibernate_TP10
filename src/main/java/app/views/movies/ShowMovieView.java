@@ -175,7 +175,7 @@ public class ShowMovieView extends View<MovieController>
         // Text
         titleLabel.setText(movie.getTitle());
         idLabel.setText("ID: " + movie.getId());
-        nbScenesLabel.setText("Scenes (" + scenes.size() + "): ");
+        nbScenesLabel.setText("Scenes:");
         directorLabel.setText("Director: " + movie.getDirector());
         producerLabel.setText("Produced by: " + (this.producer == null ? "null" : this.producer.getName()));
 
@@ -253,16 +253,7 @@ public class ShowMovieView extends View<MovieController>
 
         public PlaceType getPlaceType ()
         {
-            Place place = scene.getPlace();
-            if (place == null) {
-                return null;
-            }
-
-            if (place instanceof Theatre) {
-                return PlaceType.THEATRE;
-            }
-
-            return PlaceType.EXTERNAL_PLACE;
+            return scene.getPlace().getType();
         }
 
         public DayTime getDayTime ()

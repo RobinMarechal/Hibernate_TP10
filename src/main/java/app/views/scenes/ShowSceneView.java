@@ -148,7 +148,7 @@ public class ShowSceneView extends View<SceneController>
         descriptionLabel.setText(scene.getDescription());
         dayTimeLabel.setText("Type: " + dayTime.toString());
         placeLabel.setText("Place: " + place);
-        setupsLabel.setText("Setups (" + scene.getSetups().size() + "): ");
+        setupsLabel.setText("Setups: ");
 
         descriptionLabel.setMaxWidth(Template.CONTENT_WIDTH / 2);
         descriptionLabel.setTooltip(new Tooltip("Please click here to see the entire description"));

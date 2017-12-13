@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.models.Movie;
+import app.models.Place;
 import app.models.Producer;
 import app.models.Scene;
 import app.views.movies.AllMoviesView;
@@ -13,10 +14,10 @@ import libs.mvc.View;
 import libs.mvc.controllers.Controller;
 import libs.mvc.controllers.Home;
 import libs.mvc.controllers.ModelManager;
-import libs.queries.Query;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieController extends Controller<Integer> implements Home, ModelManager<Movie>
@@ -116,25 +117,41 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
 
     public void showScenesOfMovieAtPlaceType (Movie movie, PlaceType placeType)
     {
-        
         System.out.println(placeType);
         String hql;
-        if(placeType == PlaceType.THEATRE)
+        if (placeType == PlaceType.THEATRE) {
             hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = Theatre";
-        else
+        }
+        else {
             hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = ExternalPlace";
+        }
 
-        List<Scene> scenes = (List<Scene>) em.createQuery(hql).getResultList();
-        System.out.println(scenes);
-        System.out.println(movie.getId());
-        System.out.println(placeType);
+        List<Object[]> results = em.createQuery(hql).getResultList();
+        List<Scene> scenes = new ArrayList<>();
+
+        for (Object[] result : results) {
+            Scene scene = (Scene) result[0];
+            Place place = (Place) result[2];
+
+            scene.setPlace(place);
+            scenes.add(scene);
+        }
+
+        for (Scene scene : scenes) {
+            System.out.println(scene);
+        }
+
         View view = new ShowMovieView(this, movie, scenes);
         setTemplateView(view);
     }
 
     public void showScenesOfMovieAtDayTime (Movie movie, DayTime dayTime)
     {
-        List<Scene> scenes = Query.forModel(Scene.class, em).whereEqual("id", movie.getId()).whereEqual("dayTime", dayTime).get();
+//        List<Scene> scenes = Query.forModel(Scene.class, em).whereEqual("id", movie.getId()).whereEqual("dayTime", dayTime).get();
+        List<Scene> scenes = em.createQuery("FROM Scene s WHERE s.dayTime = :dayTime AND s.movie.id = :movieId")
+                            .setParameter("dayTime", dayTime)
+                            .setParameter("movieId", movie.getId())
+                            .getResultList();
         View view = new ShowMovieView(this, movie, scenes);
         setTemplateView(view);
     }

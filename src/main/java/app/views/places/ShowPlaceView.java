@@ -151,7 +151,7 @@ public class ShowPlaceView extends View<PlaceController>
         addressLabel.setText(place.getAddress());
         idLabel.setText("ID: " + place.getId());
         typeLabel.setText("Type: " + place.getType().toString());
-        nbScenesLabel.setText("Scenes (" + place.getScenes().size() + "): ");
+        nbScenesLabel.setText("Scenes:");
 
         typeLabel.setOnMouseClicked(event -> controller.showAllOfType(place.getType()));
 
