@@ -1,7 +1,7 @@
 package libs.ui.template.nav;
 
 import javafx.scene.control.Button;
-import libs.mvc.Home;
+import libs.mvc.controllers.Home;
 import libs.ui.template.Template;
 
 /**

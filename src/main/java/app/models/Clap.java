@@ -49,9 +49,9 @@ public class Clap extends Model<ClapPrimaryKey>
         return setup;
     }
 
-    public void setSetup (Setup setup)
+    void setSetup (Setup setup)
     {
-        // TODO
+        this.setup = setup;
     }
 
     @Transient
@@ -60,4 +60,8 @@ public class Clap extends Model<ClapPrimaryKey>
     {
         return getPrimaryKey();
     }
+
+
+
+
 }

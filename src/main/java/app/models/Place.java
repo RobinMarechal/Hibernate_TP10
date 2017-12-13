@@ -1,9 +1,11 @@
 package app.models;
 
+import libs.PlaceType;
 import libs.mvc.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -91,8 +93,17 @@ public abstract class Place extends Model<Integer>
         this.description = description;
     }
 
-    public void addScenes (Scene... scenes)
+    void addScenes (Scene... scenes)
     {
-        // TODO
+        Collections.addAll(this.scenes, scenes);
+    }
+
+    @Transient
+    public abstract PlaceType getType ();
+
+    @Override
+    public String toString ()
+    {
+        return name;
     }
 }

@@ -1,19 +1,20 @@
 package app.views.places;
 
+import app.controllers.PlaceController;
 import app.models.Place;
 import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import libs.mvc.Controller;
+import libs.PlaceType;
 import libs.mvc.View;
 import libs.ui.components.links.LinkerTableColumn;
 import libs.ui.template.Template;
 
 import java.util.List;
 
-public class AllPlacesView extends View
+public class AllPlacesView extends View<PlaceController>
 {
     private final List<Place> places;
 
@@ -21,23 +22,26 @@ public class AllPlacesView extends View
     private TableView<Place> placesTable = new TableView<>();
     private LinkerTableColumn<Place, Integer, Integer> idColumn;
     private LinkerTableColumn<Place, String, Integer> nameColumn;
-    private LinkerTableColumn<Place, String, Integer> addressColumn;
+    private TableColumn<Place, PlaceType> typeColumn;
+    private TableColumn<Place, String> addressColumn;
     private TableColumn<Place, List<Scene>> nbScenesColumn;
 
-    public AllPlacesView (Controller controller, List<Place> places)
+    public AllPlacesView (PlaceController controller, List<Place> places)
     {
         super(controller);
         this.places = places;
 
         idColumn = new LinkerTableColumn<>(controller);
         nameColumn = new LinkerTableColumn<>(controller);
-        addressColumn = new LinkerTableColumn<>(controller);
+        typeColumn = new TableColumn<>();
+        addressColumn = new TableColumn<>();
         nbScenesColumn = new TableColumn<>();
 
         setup();
         display();
     }
 
+    @SuppressWarnings ("Duplicates")
     @Override
     protected void setup ()
     {
@@ -46,13 +50,14 @@ public class AllPlacesView extends View
         setUpColumnDimensions();
 
         fitComponentToParent(placesTable);
-        placesTable.getColumns().addAll(idColumn, nameColumn, addressColumn, nbScenesColumn);
+        placesTable.getColumns().addAll(idColumn, nameColumn, typeColumn, addressColumn, nbScenesColumn);
     }
 
     public void setUpColumnFactories ()
     {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         nbScenesColumn.setCellValueFactory(new PropertyValueFactory<>("scenes"));
 
@@ -62,7 +67,6 @@ public class AllPlacesView extends View
             protected void updateItem (List<Scene> item, boolean empty)
             {
                 super.updateItem(item, empty);
-                textProperty().unbind();
 
                 if (item != null && !empty) {
                     setText(item.size() + "");
@@ -70,15 +74,29 @@ public class AllPlacesView extends View
             }
         });
 
+        typeColumn.setCellFactory(param -> new TableCell<Place, PlaceType>(){
+
+            @Override
+            protected void updateItem (PlaceType item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if(item != null && !empty)
+                {
+                    setText(item.toString());
+                    this.setOnMouseClicked(event -> controller.showAllOfType(item));
+                }
+            }
+        });
+
         idColumn.prepareEventHandler();
         nameColumn.prepareEventHandler();
-        addressColumn.prepareEventHandler();
     }
 
     public void setUpColumnTitles ()
     {
         idColumn.setText("ID");
         nameColumn.setText("Name");
+        typeColumn.setText("Type");
         addressColumn.setText("Address");
         nbScenesColumn.setText("Scenes");
     }
@@ -86,9 +104,10 @@ public class AllPlacesView extends View
     public void setUpColumnDimensions ()
     {
         idColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.10);
-        nameColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.30);
-        addressColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.30);
-        nbScenesColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.29);
+        nameColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.22);
+        typeColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.22);
+        addressColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.36);
+        nbScenesColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.10);
     }
 
     @Override

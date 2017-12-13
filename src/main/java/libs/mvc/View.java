@@ -3,13 +3,14 @@ package libs.mvc;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import libs.mvc.controllers.Controller;
 import libs.ui.template.Template;
 
-public abstract class View extends AnchorPane
+public abstract class View<CType extends Controller> extends AnchorPane
 {
-    protected final Controller controller;
+    protected final CType controller;
 
-    public View (Controller controller)
+    public View (CType controller)
     {
         this.controller = controller;
         this.getStyleClass().addAll("bg-almost-white");

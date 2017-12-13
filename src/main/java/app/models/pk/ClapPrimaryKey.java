@@ -59,4 +59,30 @@ public class ClapPrimaryKey implements Serializable
 
         this.setupId = setupId;
     }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ClapPrimaryKey that = (ClapPrimaryKey) o;
+
+        if (number != that.number) {
+            return false;
+        }
+        return setupId == that.setupId;
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        int result = number;
+        result = 31 * result + setupId;
+        return result;
+    }
 }

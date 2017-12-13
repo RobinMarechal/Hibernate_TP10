@@ -64,13 +64,16 @@ public class Setup extends Model<Integer>
         return claps;
     }
 
-    public void setScene (Scene scene)
+    void setScene (Scene scene)
     {
-        // TODO
+        this.scene = scene;
     }
 
-    public void addClaps (Clap... clap)
+    public void addClaps (Clap... claps)
     {
-        // TODO
+        for (Clap clap : claps) {
+            this.claps.add(clap);
+            clap.setSetup(this);
+        }
     }
 }

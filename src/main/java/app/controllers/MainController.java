@@ -1,7 +1,7 @@
 package app.controllers;
 
-import libs.mvc.Controller;
-import libs.mvc.Home;
+import libs.mvc.controllers.Controller;
+import libs.mvc.controllers.Home;
 
 public class MainController extends Controller<Integer> implements Home
 {

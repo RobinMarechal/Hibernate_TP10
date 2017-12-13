@@ -81,7 +81,6 @@ public class Movie extends Model<Integer>
 
     public void setProducer (Producer producer)
     {
-        // TODO
         if(producer != null)
         {
             this.producer = producer;
@@ -96,6 +95,15 @@ public class Movie extends Model<Integer>
 
     public void addScenes (Scene... scenes)
     {
-        // TODO
+        for (Scene scene : scenes) {
+            this.scenes.add(scene);
+            scene.setMovie(this);
+        }
+    }
+
+    @Override
+    public String toString ()
+    {
+        return this.title;
     }
 }

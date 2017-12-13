@@ -1,4 +1,4 @@
-package libs.mvc;
+package libs.mvc.controllers;
 
 public interface Home
 {

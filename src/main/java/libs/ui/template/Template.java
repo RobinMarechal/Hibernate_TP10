@@ -4,7 +4,9 @@ import app.controllers.MovieController;
 import app.controllers.PlaceController;
 import app.controllers.ProducerController;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -31,14 +33,14 @@ public class Template extends Scene
 
     private VBox navbar;
     private ScrollPane contentPane;
-    private MenuBar menubar;
+    private MenuBar menuBar;
 
     private NavbarItemList navbarItems;
     private NavbarItem selectedNavbarItem;
 
     public final static int CONTENT_WIDTH = 600;
     public final static int NAVBAR_WIDTH = 200;
-    public final static int HEIGHT = 350;
+    public final static int HEIGHT = 400;
 
     private Template ()
     {
@@ -52,6 +54,16 @@ public class Template extends Scene
 
         displayNavbar();
         displayContentPane();
+
+
+        initMenuBar();
+
+        // Addition of the menubar
+        Pane menuBarPane = new Pane();
+        menuBarPane.setMaxHeight(30);
+        menuBarPane.getStyleClass().add("bg-transparent");
+        menuBarPane.getChildren().add(menuBar);
+        layout.setTop(menuBarPane);
 
         URL jbootx = Template.class.getResource("/css/jbootx.css");
         if (jbootx != null) {
@@ -102,6 +114,27 @@ public class Template extends Scene
     public void setView (Pane view)
     {
         contentPane.setContent(view);
+    }
+
+    private void initMenuBar ()
+    {
+        // Creation of the menu items
+        // Add...
+        MenuItem itemAddMovie   = new MenuItem("Movie            ");
+        MenuItem itemAddPlace = new MenuItem("Place            ");
+        MenuItem itemAddProducer = new MenuItem("Producer            ");
+
+        // Preparation of the events
+        itemAddMovie.setOnAction(event -> new MovieController().showCreationDialog());
+        itemAddPlace.setOnAction(event -> new PlaceController().showCreationDialog());
+        itemAddProducer.setOnAction(event -> new ProducerController().showCreationDialog());
+
+        // Creation of the menus
+        Menu menuAdd = new Menu("Create..");
+        menuAdd.getItems().addAll(itemAddMovie, itemAddPlace, itemAddProducer);
+
+        // We finally add all menus to the menubar
+        menuBar = new MenuBar(menuAdd);
     }
 
     public void setSelectedNavbarItem (NavbarItem selectedNavbarItem)

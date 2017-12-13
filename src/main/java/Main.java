@@ -5,10 +5,10 @@
  */
 
 import app.controllers.MovieController;
-import app.models.Movie;
-import app.models.Producer;
+import app.models.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import libs.DayTime;
 import libs.EntityManagerHolder;
 import libs.ui.template.Template;
 
@@ -56,8 +56,11 @@ public class Main extends Application
         Movie    movie2   = new Movie("Bonjour", "Moi");
         Producer producer = new Producer("John Doe");
 
-        movie.setProducer(producer);
+        Place place = new Theatre("Ici", "La bas", "coucou");
 
+        Scene scene = new Scene(movie1, place, DayTime.DAY, "jsp");
+
+        movie.setProducer(producer);
 
         em.getTransaction().begin();
 
@@ -65,6 +68,8 @@ public class Main extends Application
         em.persist(movie);
         em.persist(movie1);
         em.persist(movie2);
+        em.persist(place);
+        em.persist(scene);
 
         em.getTransaction().commit();
     }

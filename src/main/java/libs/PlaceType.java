@@ -1,15 +1,13 @@
 package libs;
 
-import java.io.Serializable;
-
-public enum DayTime implements Serializable
+public enum PlaceType
 {
-    NIGHT("Night"),
-    DAY("Day");
+    THEATRE("Theatre"),
+    EXTERNAL_PLACE("External Place");
 
     private String value;
 
-    DayTime (String value)
+    PlaceType (String value)
     {
         this.value = value;
     }

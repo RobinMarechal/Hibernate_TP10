@@ -1,6 +1,6 @@
 package app.controllers;
 
-import libs.mvc.Controller;
+import libs.mvc.controllers.Controller;
 
 public class SetupController extends Controller<Integer>
 {

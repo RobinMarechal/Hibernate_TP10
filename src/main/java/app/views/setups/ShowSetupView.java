@@ -1,7 +1,7 @@
 package app.views.setups;
 
 import app.models.Setup;
-import libs.mvc.Controller;
+import libs.mvc.controllers.Controller;
 import libs.mvc.View;
 
 public class ShowSetupView extends View

@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.models.pk.ClapPrimaryKey;
-import libs.mvc.Controller;
+import libs.mvc.controllers.Controller;
 
 public class ClapController extends Controller<ClapPrimaryKey>
 {

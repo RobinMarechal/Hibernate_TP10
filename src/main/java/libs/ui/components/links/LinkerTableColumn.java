@@ -4,7 +4,7 @@ import app.models.pk.ClapPrimaryKey;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
-import libs.mvc.Controller;
+import libs.mvc.controllers.Controller;
 import libs.mvc.Model;
 
 import java.io.Serializable;

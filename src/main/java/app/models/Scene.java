@@ -11,13 +11,15 @@ import java.util.List;
 public class Scene extends Model<Integer>
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Basic
     private String description;
 
     @Basic
-    private DayTime dayTime;
+    @Enumerated(EnumType.STRING)
+    private DayTime dayTime = DayTime.DAY;
 
     @ManyToOne (optional = false)
     private Movie movie;
@@ -36,19 +38,19 @@ public class Scene extends Model<Integer>
     public Scene (Movie movie)
     {
         this();
-        this.movie = movie;
+        setMovie(movie);
     }
 
     public Scene (Movie movie, Place place)
     {
         this(movie);
-        this.place = place;
+        setPlace(place);
     }
 
     public Scene (Movie movie, Place place, DayTime dayTime)
     {
         this(movie, place);
-        this.place = place;
+        this.dayTime = dayTime;
     }
 
 
@@ -99,18 +101,22 @@ public class Scene extends Model<Integer>
         this.dayTime = dayTime;
     }
 
-    public void setMovie (Movie movie)
+    void setMovie (Movie movie)
     {
-        // TODO
+        this.movie = movie;
     }
 
     public void setPlace (Place place)
     {
-        // TODO
+        this.place = place;
+        place.addScenes(this);
     }
 
-    public void addSetups(Setup... setup)
+    public void addSetups(Setup... setups)
     {
-        // TODO
+        for (Setup setup : setups) {
+            this.setups.add(setup);
+            setup.setScene(this);
+        }
     }
 }

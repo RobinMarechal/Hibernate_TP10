@@ -1,6 +1,9 @@
 package app.models;
 
+import libs.PlaceType;
+
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 public class ExternalPlace extends Place
@@ -23,5 +26,12 @@ public class ExternalPlace extends Place
     public ExternalPlace (String name, String address, String description)
     {
         super(name, address, description);
+    }
+
+    @Transient
+    @Override
+    public PlaceType getType ()
+    {
+        return PlaceType.EXTERNAL_PLACE;
     }
 }

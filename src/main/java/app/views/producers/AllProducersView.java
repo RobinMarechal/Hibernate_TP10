@@ -13,7 +13,7 @@ import libs.ui.template.Template;
 
 import java.util.List;
 
-public class AllProducersView extends View
+public class AllProducersView extends View<ProducerController>
 {
     private List<Producer> movies;
 
