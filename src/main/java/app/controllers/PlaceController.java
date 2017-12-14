@@ -3,6 +3,7 @@ package app.controllers;
 import app.models.ExternalPlace;
 import app.models.Place;
 import app.models.Theatre;
+import app.models.dao.PlaceDAO;
 import app.views.places.AllPlacesView;
 import app.views.places.CreatePlaceDialog;
 import app.views.places.ShowPlaceView;
@@ -10,10 +11,9 @@ import fr.polytech.marechal.FormMap;
 import fr.polytech.marechal.exceptions.ErrorType;
 import fr.polytech.marechal.exceptions.FormException;
 import libs.PlaceType;
-import libs.mvc.View;
 import libs.mvc.controllers.Controller;
 import libs.mvc.controllers.Home;
-import libs.mvc.controllers.ModelManager;
+import libs.mvc.views.View;
 import libs.ui.components.dialogs.DialogsManager;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Controls both Theatre and ExternalPlace classes
  */
-public class PlaceController extends Controller<Integer> implements Home, ModelManager<Place>
+public class PlaceController extends Controller<Place, Integer, PlaceDAO> implements Home
 {
     public PlaceController ()
     {
@@ -29,17 +29,29 @@ public class PlaceController extends Controller<Integer> implements Home, ModelM
     }
 
     @Override
+    protected PlaceDAO prepareDAO ()
+    {
+        return new PlaceDAO();
+    }
+
+    @Override
     public void show (Integer id)
     {
-        Place place = em.find(Place.class, id);
+        Place place = dao.find(id);
         View  view  = new ShowPlaceView(this, place);
         setTemplateView(view);
     }
 
     @Override
+    public void showDetails (Place model)
+    {
+
+    }
+
+    @Override
     public void showAll ()
     {
-        List<Place> places = em.createQuery("FROM Place").getResultList();
+        List<Place> places = dao.all();
         View        view   = new AllPlacesView(this, places);
         setTemplateView(view);
     }
@@ -52,13 +64,17 @@ public class PlaceController extends Controller<Integer> implements Home, ModelM
 
     /**
      * Show the dialog for the modification or the creation of the model
-     *
-     * @param model the model to update, or null for a creation
      */
     @Override
-    public void showCreationDialog (Place model)
+    public void showCreationDialog ()
     {
-        CreatePlaceDialog dialog = new CreatePlaceDialog(this);
+        showUpdateDialog(null);
+    }
+
+    @Override
+    public void showUpdateDialog (Place model)
+    {
+        CreatePlaceDialog dialog = new CreatePlaceDialog(this, model);
         DialogsManager.instance.openDialog(dialog);
     }
 
@@ -70,7 +86,7 @@ public class PlaceController extends Controller<Integer> implements Home, ModelM
     @Override
     public void showDeleteDialog (Place model)
     {
-
+        this.showDeleteDialogForClass(model, "place");
     }
 
     /**
@@ -81,39 +97,7 @@ public class PlaceController extends Controller<Integer> implements Home, ModelM
     @Override
     public void create (FormMap form)
     {
-        System.out.println(form);
-        if (!form.hasKeys("name", "address", "type", "description")) {
-            throw new FormException(ErrorType.MISSING_FIELD);
-        }
-
-        String    name        = ((String) form.get("name").getValue());
-        String    address     = ((String) form.get("address").getValue());
-        PlaceType type        = ((PlaceType) form.get("type").getValue());
-        String    description = ((String) form.get("description").getValue());
-
-        Place place;
-
-        if (type == PlaceType.THEATRE) {
-            place = new Theatre(name, address, description);
-        }
-        else {
-            place = new ExternalPlace(name, address, description);
-        }
-
-        place.persist();
-        DialogsManager.instance.closeLastOpened();
-
-        this.show(place.getId());
-    }
-
-    /**
-     * Delete a model instance and persists it to the database
-     *
-     * @param model the model instance to delete
-     */
-    @Override
-    public void delete (Place model)
-    {
+        this.update(null, form);
     }
 
     /**
@@ -125,21 +109,54 @@ public class PlaceController extends Controller<Integer> implements Home, ModelM
     @Override
     public void update (Place model, FormMap form)
     {
+        if (!form.hasKeys("name", "address", "type", "description")) {
+            throw new FormException(ErrorType.MISSING_FIELD);
+        }
+
+        String    name        = ((String) form.get("name").getValue());
+        String    address     = ((String) form.get("address").getValue());
+        PlaceType type        = ((PlaceType) form.get("type").getValue());
+        String    description = ((String) form.get("description").getValue());
+
+
+        if (model == null) {
+            if (type == PlaceType.THEATRE) {
+                model = new Theatre(name, address, description);
+            }
+            else {
+                model = new ExternalPlace(name, address, description);
+            }
+
+            dao.persist(model);
+        }
+        else {
+            model.setName(name);
+            model.setAddress(address);
+            model.setDescription(description);
+        }
+
+        DialogsManager.instance.closeLastOpened();
+
+        this.show(model.getId());
+    }
+
+    /**
+     * Delete a model instance and persists it to the database
+     *
+     * @param model the model instance to delete
+     */
+    @Override
+    public void delete (Place model)
+    {
+        dao.remove(model);
+        this.showAll();
     }
 
     public void showAllOfType (PlaceType item)
     {
-        String query = "FROM ";
+        List<Place> places = dao.allOfType(item);
 
-        if (item == PlaceType.THEATRE) {
-            query += "Threatre";
-        }
-        else {
-            query += "ExternalPlace";
-        }
-
-        List<Place> places = em.createQuery(query).getResultList();
-        View        view   = new AllPlacesView(this, places);
+        View view = new AllPlacesView(this, places);
         setTemplateView(view);
     }
 }

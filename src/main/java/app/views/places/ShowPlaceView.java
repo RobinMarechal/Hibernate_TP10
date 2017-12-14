@@ -14,23 +14,16 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import libs.DayTime;
-import libs.mvc.View;
+import libs.mvc.views.ShowView;
 import libs.ui.components.links.LinkerTableColumn;
 
 import java.util.List;
 
-public class ShowPlaceView extends View<PlaceController>
+public class ShowPlaceView extends ShowView<Place, PlaceController>
 {
-    private final Place place;
-
     private final MovieController movieController = new MovieController();
 
-    private BorderPane borderPane = new BorderPane();
-
-    private VBox vbox = new VBox();
     private Label nameLabel = new Label();
     private Label idLabel = new Label();
     private Label typeLabel = new Label();
@@ -45,15 +38,13 @@ public class ShowPlaceView extends View<PlaceController>
 
     public ShowPlaceView (PlaceController controller, Place place)
     {
-        super(controller);
-        this.place = place;
+        super(controller, place);
 
         idColumn = new LinkerTableColumn<>(movieController);
         movieColumn = new LinkerTableColumn<>(movieController);
         setupsColumn = new TableColumn<>();
         dayTimeColumn = new TableColumn<>();
 
-        setup();
         display();
     }
 
@@ -109,18 +100,6 @@ public class ShowPlaceView extends View<PlaceController>
             }
         });
 
-//        dayTimeColumn.setCellFactory(param -> new TableCell<Scene, DayTime>()
-//        {
-//            @Override
-//            protected void updateItem (DayTime item, boolean empty)
-//            {
-//                super.updateItem(item, empty);
-//                if (!empty && item != null) {
-//                    setText(item.toString());
-//                }
-//            }
-//        });
-
         setupsColumn.setCellFactory(event -> new TableCell<Scene, List<Setup>>()
         {
             @Override
@@ -147,22 +126,21 @@ public class ShowPlaceView extends View<PlaceController>
 
     private void setupTopPart ()
     {
-        nameLabel.setText(place.getName());
-        addressLabel.setText(place.getAddress());
-        idLabel.setText("ID: " + place.getId());
-        typeLabel.setText("Type: " + place.getType().toString());
+        nameLabel.setText(model.getName());
+        addressLabel.setText(model.getAddress());
+        idLabel.setText("ID: " + model.getId());
+        typeLabel.setText("Type: " + model.getType().toString());
         nbScenesLabel.setText("Scenes:");
 
-        typeLabel.setOnMouseClicked(event -> controller.showAllOfType(place.getType()));
+        typeLabel.getStyleClass().add("link");
+        typeLabel.setOnMouseClicked(event -> controller.showAllOfType(model.getType()));
 
-        ObservableList<Node> children = vbox.getChildren();
+        ObservableList<Node> children = topLeftVBox.getChildren();
         children.add(nameLabel);
         //        children.add(idLabel);
         children.add(addressLabel);
         children.add(typeLabel);
         children.add(nbScenesLabel);
-
-        borderPane.setTop(vbox);
 
         nameLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");
@@ -186,7 +164,7 @@ public class ShowPlaceView extends View<PlaceController>
     @Override
     protected void display ()
     {
-        scenesTable.getItems().addAll(place.getScenes());
-        this.addComponents(borderPane);
+        setup();
+        scenesTable.getItems().addAll(model.getScenes());
     }
 }

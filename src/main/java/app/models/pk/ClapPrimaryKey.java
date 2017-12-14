@@ -75,7 +75,7 @@ public class ClapPrimaryKey implements Serializable
         if (number != that.number) {
             return false;
         }
-        return setupId == that.setupId;
+        return setupId == that.setupId && setupId != 0 && number != 0;
     }
 
     @Override

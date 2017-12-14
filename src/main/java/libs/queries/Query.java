@@ -1,6 +1,6 @@
 package libs.queries;
 
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;

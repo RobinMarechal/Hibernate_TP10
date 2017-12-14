@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import libs.DayTime;
-import libs.mvc.View;
+import libs.mvc.views.View;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 import libs.ui.components.links.LinkerTableColumn;

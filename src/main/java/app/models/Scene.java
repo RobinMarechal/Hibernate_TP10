@@ -1,7 +1,7 @@
 package app.models;
 
 import libs.DayTime;
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,14 +11,14 @@ import java.util.List;
 public class Scene extends Model<Integer>
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
 
     @Basic
     private String description;
 
     @Basic
-    @Enumerated(EnumType.STRING)
+    @Enumerated (EnumType.STRING)
     private DayTime dayTime = DayTime.DAY;
 
     @ManyToOne (optional = false)
@@ -108,15 +108,38 @@ public class Scene extends Model<Integer>
 
     public void setPlace (Place place)
     {
-        this.place = place;
-        place.addScenes(this);
+        if (place != null && this.place != place) {
+            this.place = place;
+            place.addScenes(this);
+        }
     }
 
-    public void addSetups(Setup... setups)
+    public void addSetups (Setup... setups)
     {
         for (Setup setup : setups) {
             this.setups.add(setup);
             setup.setScene(this);
         }
+    }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Scene scene = (Scene) o;
+
+        return id == scene.id && id != 0;
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return id;
     }
 }

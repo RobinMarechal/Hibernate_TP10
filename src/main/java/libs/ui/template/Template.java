@@ -38,7 +38,7 @@ public class Template extends Scene
     private NavbarItemList navbarItems;
     private NavbarItem selectedNavbarItem;
 
-    public final static int CONTENT_WIDTH = 600;
+    public final static int CONTENT_WIDTH = 750;
     public final static int NAVBAR_WIDTH = 200;
     public final static int HEIGHT = 400;
 
@@ -47,7 +47,7 @@ public class Template extends Scene
         super(new Pane());
 
         layout = new BorderPane();
-        layout.setPrefWidth(CONTENT_WIDTH + NAVBAR_WIDTH);
+        layout.setPrefWidth(CONTENT_WIDTH + NAVBAR_WIDTH + 5);
         layout.setPrefHeight(HEIGHT + 18.33);
         layout.getStyleClass().add("bg-almost-white");
         this.setRoot(layout);

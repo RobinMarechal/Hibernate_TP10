@@ -34,4 +34,13 @@ public class ExternalPlace extends Place
     {
         return PlaceType.EXTERNAL_PLACE;
     }
+
+
+    @Override
+    public boolean equals (Object o)
+    {
+        return super.equals(o) && o instanceof ExternalPlace;
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package app.models;
 
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class Movie extends Model<Integer>
 
     public void setProducer (Producer producer)
     {
-        if(producer != null)
+        if(producer != null && this.producer != producer)
         {
             this.producer = producer;
             producer.addMovies(this);
@@ -105,5 +105,26 @@ public class Movie extends Model<Integer>
     public String toString ()
     {
         return this.title;
+    }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Movie movie = (Movie) o;
+
+        return id == movie.id && id != null && id != 0;
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return id != null ? id.hashCode() : 0;
     }
 }

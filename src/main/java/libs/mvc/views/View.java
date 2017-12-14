@@ -1,4 +1,4 @@
-package libs.mvc;
+package libs.mvc.views;
 
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.AnchorPane;

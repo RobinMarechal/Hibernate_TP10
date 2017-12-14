@@ -2,13 +2,15 @@ package app.views.places;
 
 import app.controllers.PlaceController;
 import app.models.Place;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import libs.PlaceType;
-import libs.mvc.View;
+import libs.mvc.views.View;
 import libs.ui.components.links.LinkerTableColumn;
 import libs.ui.template.Template;
 
@@ -25,6 +27,8 @@ public class AllPlacesView extends View<PlaceController>
     private TableColumn<Place, PlaceType> typeColumn;
     private TableColumn<Place, String> addressColumn;
     private TableColumn<Place, List<Scene>> nbScenesColumn;
+
+    private Tooltip placeColumnTooltip = new Tooltip("Click here to see all the places of the same type");
 
     public AllPlacesView (PlaceController controller, List<Place> places)
     {
@@ -74,15 +78,19 @@ public class AllPlacesView extends View<PlaceController>
             }
         });
 
-        typeColumn.setCellFactory(param -> new TableCell<Place, PlaceType>(){
-
+        typeColumn.setCellFactory(param -> new TableCell<Place, PlaceType>()
+        {
             @Override
             protected void updateItem (PlaceType item, boolean empty)
             {
                 super.updateItem(item, empty);
-                if(item != null && !empty)
-                {
+                ObservableList<String> styleClass = getStyleClass();
+                setTooltip(null);
+                styleClass.remove("link");
+                if (item != null && !empty) {
                     setText(item.toString());
+                    styleClass.add("link");
+                    setTooltip(placeColumnTooltip);
                     this.setOnMouseClicked(event -> controller.showAllOfType(item));
                 }
             }

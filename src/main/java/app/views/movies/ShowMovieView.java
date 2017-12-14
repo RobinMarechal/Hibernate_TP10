@@ -4,7 +4,10 @@ import app.controllers.MovieController;
 import app.controllers.PlaceController;
 import app.controllers.ProducerController;
 import app.controllers.SceneController;
-import app.models.*;
+import app.models.Movie;
+import app.models.Place;
+import app.models.Producer;
+import app.models.Scene;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,29 +16,23 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import libs.DayTime;
 import libs.PlaceType;
-import libs.mvc.Model;
-import libs.mvc.View;
+import libs.mvc.models.Model;
+import libs.mvc.views.ShowView;
 import libs.ui.components.links.LinkerTableColumn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowMovieView extends View<MovieController>
+public class ShowMovieView extends ShowView<Movie, MovieController>
 {
-    private final Movie movie;
     private final Producer producer;
 
     private final SceneController sceneController;
     private final PlaceController placeController;
     private final List<Scene> scenes;
 
-    private BorderPane borderPane;
-
-    private VBox vbox;
     private Label titleLabel;
     private Label idLabel;
     private Label nbScenesLabel;
@@ -51,17 +48,13 @@ public class ShowMovieView extends View<MovieController>
 
     public ShowMovieView (MovieController controller, Movie movie, List<Scene> scenes)
     {
-        super(controller);
-        this.movie = movie;
+        super(controller, movie);
         this.producer = movie.getProducer();
         this.scenes = scenes;
 
         sceneController = new SceneController();
         placeController = new PlaceController();
 
-        borderPane = new BorderPane();
-
-        vbox = new VBox();
         titleLabel = new Label();
         idLabel = new Label();
         nbScenesLabel = new Label();
@@ -82,7 +75,6 @@ public class ShowMovieView extends View<MovieController>
     @Override
     protected void setup ()
     {
-        setAnchorOfComponent(borderPane, 5, 5, 5, 5);
         setupTopPart();
         setupBottomPart();
         prepareEventHandlers();
@@ -126,7 +118,8 @@ public class ShowMovieView extends View<MovieController>
         dayTimeColumn.setCellValueFactory(new PropertyValueFactory<>("dayTime"));
         placeNameColumn.setCellValueFactory(new PropertyValueFactory<>("placeName"));
 
-        placeTypeColumn.setCellFactory(event->new TableCell<SceneRow, PlaceType>(){
+        placeTypeColumn.setCellFactory(event -> new TableCell<SceneRow, PlaceType>()
+        {
             @Override
             protected void updateItem (PlaceType item, boolean empty)
             {
@@ -134,16 +127,16 @@ public class ShowMovieView extends View<MovieController>
                 ObservableList<String> styleClass = getStyleClass();
                 styleClass.remove("link");
 
-                if(item != null && !empty)
-                {
+                if (item != null && !empty) {
                     styleClass.add("link");
                     setText(item.toString());
-                    setOnMouseClicked(ev -> controller.showScenesOfMovieAtPlaceType(movie, item));
+                    setOnMouseClicked(ev -> controller.showScenesOfMovieAtPlaceType(model, item));
                 }
             }
         });
 
-        dayTimeColumn.setCellFactory(event->new TableCell<SceneRow, DayTime>(){
+        dayTimeColumn.setCellFactory(event -> new TableCell<SceneRow, DayTime>()
+        {
             @Override
             protected void updateItem (DayTime item, boolean empty)
             {
@@ -151,11 +144,10 @@ public class ShowMovieView extends View<MovieController>
                 ObservableList<String> styleClass = getStyleClass();
                 styleClass.remove("link");
 
-                if(item != null && !empty)
-                {
+                if (item != null && !empty) {
                     styleClass.add("link");
                     setText(item.toString());
-                    setOnMouseClicked(ev -> controller.showScenesOfMovieAtDayTime(movie, item));
+                    setOnMouseClicked(ev -> controller.showScenesOfMovieAtDayTime(model, item));
                 }
             }
         });
@@ -170,25 +162,24 @@ public class ShowMovieView extends View<MovieController>
         setSizeOfColumnInTable(placeNameColumn, scenesTable, 43);
     }
 
+    public void setupLabels ()
+    {
+    }
+
     private void setupTopPart ()
     {
-        // Text
-        titleLabel.setText(movie.getTitle());
-        idLabel.setText("ID: " + movie.getId());
+        titleLabel.setText(model.getTitle());
+        idLabel.setText("ID: " + model.getId());
         nbScenesLabel.setText("Scenes:");
-        directorLabel.setText("Director: " + movie.getDirector());
+        directorLabel.setText("Director: " + model.getDirector());
         producerLabel.setText("Produced by: " + (this.producer == null ? "null" : this.producer.getName()));
 
-        ObservableList<Node> children = vbox.getChildren();
+        ObservableList<Node> leftChildren = topLeftVBox.getChildren();
 
-        children.add(titleLabel);
-        children.add(directorLabel);
-        children.add(producerLabel);
-        children.add(nbScenesLabel);
-
-        borderPane.setTop(vbox);
-
-        // Classes
+        leftChildren.add(titleLabel);
+        leftChildren.add(directorLabel);
+        leftChildren.add(producerLabel);
+        leftChildren.add(nbScenesLabel);
 
         titleLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");
@@ -207,6 +198,9 @@ public class ShowMovieView extends View<MovieController>
         nbScenesLabel.setAlignment(Pos.CENTER);
         directorLabel.setAlignment(Pos.CENTER);
         producerLabel.setAlignment(Pos.CENTER);
+
+        topLeftVBox.setAlignment(Pos.CENTER);
+        topLeftVBox.setMaxHeight(Double.MAX_VALUE);
     }
 
     private List<SceneRow> getSceneRowList ()
@@ -220,8 +214,12 @@ public class ShowMovieView extends View<MovieController>
     protected void display ()
     {
         scenesTable.getItems().addAll(getSceneRowList());
-        this.addComponents(borderPane);
     }
+
+
+    // ---------------------------------
+    // INNER CLASS
+    // ---------------------------------
 
     public class SceneRow extends Model<Integer>
     {

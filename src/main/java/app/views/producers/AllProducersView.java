@@ -7,7 +7,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import libs.mvc.View;
+import libs.mvc.views.View;
 import libs.ui.components.links.LinkerTableColumn;
 import libs.ui.template.Template;
 

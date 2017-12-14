@@ -1,12 +1,16 @@
 package app.views.movies;
 
 import app.controllers.MovieController;
+import app.models.Movie;
 import app.models.Producer;
 import fr.polytech.marechal.FieldValueType;
 import fr.polytech.marechal.FormMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import libs.ui.components.dialogs.Dialog;
 
@@ -16,6 +20,7 @@ public class CreateMovieDialog extends Dialog
 {
     private final MovieController controller;
     private final List<Producer> producers;
+    private final Movie movie;
     private FormMap form;
 
     private Label dialogTitle;
@@ -39,9 +44,10 @@ public class CreateMovieDialog extends Dialog
     /**
      * Default constructor
      */
-    public CreateMovieDialog (MovieController controller, List<Producer> producers)
+    public CreateMovieDialog (MovieController controller, Movie movie, List<Producer> producers)
     {
         super();
+        this.movie = movie;
         this.controller = controller;
         this.producers = producers;
 
@@ -52,7 +58,7 @@ public class CreateMovieDialog extends Dialog
         formBox.setPadding(new Insets(20, 40, 20, 40));
         addStylesheetTo(formBox);
 
-        dialogTitle = new Label("Creation of a movie");
+        dialogTitle = new Label((movie == null ? "Creation of a movie" : "Update a movie"));
         dialogTitle.getStyleClass().add("h2");
         dialogTitle.setMaxWidth(Double.MAX_VALUE);
         dialogTitle.setAlignment(Pos.CENTER);
@@ -91,12 +97,19 @@ public class CreateMovieDialog extends Dialog
     {
         form = new FormMap();
 
+        if(movie != null)
+        {
+            titleField.setText(movie.getTitle());
+            directorField.setText(movie.getDirector());
+            producerField.getSelectionModel().select(movie.getProducer());
+        }
+
         form.setSubmitButton(submit);
         form.add("title", FieldValueType.VARCHAR, titleField, true);
         form.add("director", FieldValueType.VARCHAR, directorField, true);
         form.add("producer", FieldValueType.UNDEFINED, producerField, true);
 
-        form.setOnSubmit(event -> controller.create(form));
+        form.setOnSubmit(event -> controller.update(movie, form));
 
         producerField.getItems().addAll(producers);
     }

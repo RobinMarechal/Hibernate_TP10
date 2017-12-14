@@ -11,22 +11,16 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import libs.mvc.View;
+import libs.mvc.views.ShowView;
 import libs.ui.components.links.LinkerTableColumn;
 
 import java.util.List;
 
-public class ShowProducerView extends View<ProducerController>
+public class ShowProducerView extends ShowView<Producer, ProducerController>
 {
-    private final Producer producer;
-
     private final MovieController movieController = new MovieController();
 
-    private BorderPane borderPane = new BorderPane();
 
-    private VBox vbox = new VBox();
     private Label nameLabel = new Label();
     private Label idLabel = new Label();
     private Label nbMoviesLabel = new Label();
@@ -39,8 +33,7 @@ public class ShowProducerView extends View<ProducerController>
 
     public ShowProducerView (ProducerController controller, Producer producer)
     {
-        super(controller);
-        this.producer = producer;
+        super(controller, producer);
 
         idColumn = new LinkerTableColumn<>(movieController);
         titleColumn = new LinkerTableColumn<>(movieController);
@@ -111,13 +104,11 @@ public class ShowProducerView extends View<ProducerController>
 
     private void setupTopPart ()
     {
-        nameLabel.setText(producer.getName());
-        idLabel.setText("ID: " + producer.getId());
+        nameLabel.setText(model.getName());
+        idLabel.setText("ID: " + model.getId());
         nbMoviesLabel.setText("Movies:");
 
-        vbox.getChildren().addAll(nameLabel/*, idLabel*/, nbMoviesLabel);
-
-        borderPane.setTop(vbox);
+        topLeftVBox.getChildren().addAll(nameLabel/*, idLabel*/, nbMoviesLabel);
 
         nameLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");
@@ -135,7 +126,6 @@ public class ShowProducerView extends View<ProducerController>
     @Override
     protected void display ()
     {
-        moviesTable.getItems().addAll(producer.getMovies());
-        this.addComponents(borderPane);
+        moviesTable.getItems().addAll(model.getMovies());
     }
 }

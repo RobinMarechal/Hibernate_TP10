@@ -1,6 +1,6 @@
 package app.models;
 
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class Producer extends Model<Integer>
 {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Basic
     private String name;
@@ -61,5 +61,26 @@ public class Producer extends Model<Integer>
     public String toString ()
     {
         return this.name;
+    }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Producer producer = (Producer) o;
+
+        return id == producer.id && id != null && id != 0;
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return id;
     }
 }

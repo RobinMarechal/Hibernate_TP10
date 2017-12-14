@@ -1,7 +1,7 @@
 package app.models;
 
 import app.models.pk.ClapPrimaryKey;
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.*;
 import java.time.Duration;
@@ -62,6 +62,24 @@ public class Clap extends Model<ClapPrimaryKey>
     }
 
 
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
+        Clap clap = (Clap) o;
 
+        return primaryKey.equals(clap.primaryKey);
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return primaryKey.hashCode();
+    }
 }

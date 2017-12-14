@@ -34,4 +34,10 @@ public class Theatre extends Place
     {
         return PlaceType.THEATRE;
     }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        return super.equals(o) && o instanceof ExternalPlace;
+    }
 }

@@ -1,6 +1,7 @@
 package app.views.producers;
 
 import app.controllers.ProducerController;
+import app.models.Producer;
 import fr.polytech.marechal.FieldValueType;
 import fr.polytech.marechal.FormMap;
 import javafx.geometry.Insets;
@@ -14,6 +15,7 @@ import libs.ui.components.dialogs.Dialog;
 public class CreateProducerDialog extends Dialog
 {
     private final ProducerController controller;
+    private final Producer producer;
     private FormMap form;
 
     private Label dialogTitle;
@@ -29,9 +31,10 @@ public class CreateProducerDialog extends Dialog
     /**
      * Default constructor
      */
-    public CreateProducerDialog (ProducerController controller)
+    public CreateProducerDialog (ProducerController controller, Producer producer)
     {
         super();
+        this.producer = producer;
         this.controller = controller;
 
         this.sizeToScene();
@@ -41,7 +44,7 @@ public class CreateProducerDialog extends Dialog
         formBox.setPadding(new Insets(20, 40, 20, 40));
         addStylesheetTo(formBox);
 
-        dialogTitle = new Label("Creation of a producer");
+        dialogTitle = new Label((producer == null ? "Creation of a producer" : "Update producer"));
         dialogTitle.getStyleClass().add("h2");
         dialogTitle.setMaxWidth(Double.MAX_VALUE);
         dialogTitle.setAlignment(Pos.CENTER);
@@ -68,9 +71,14 @@ public class CreateProducerDialog extends Dialog
     {
         form = new FormMap();
 
+        if(producer != null)
+        {
+            nameField.setText(producer.getName());
+        }
+
         form.add("name", FieldValueType.VARCHAR, nameField, true);
         form.setSubmitButton(submit);
 
-        form.setOnSubmit(event -> controller.create(form));
+        form.setOnSubmit(event -> controller.update(producer, form));
     }
 }

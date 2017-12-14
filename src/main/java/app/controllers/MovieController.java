@@ -1,30 +1,39 @@
 package app.controllers;
 
 import app.models.Movie;
-import app.models.Place;
 import app.models.Producer;
 import app.models.Scene;
+import app.models.dao.MovieDAO;
+import app.models.dao.ProducerDAO;
 import app.views.movies.AllMoviesView;
 import app.views.movies.CreateMovieDialog;
 import app.views.movies.ShowMovieView;
 import fr.polytech.marechal.FormMap;
+import fr.polytech.marechal.exceptions.ErrorType;
+import fr.polytech.marechal.exceptions.FormException;
 import libs.DayTime;
 import libs.PlaceType;
-import libs.mvc.View;
 import libs.mvc.controllers.Controller;
 import libs.mvc.controllers.Home;
-import libs.mvc.controllers.ModelManager;
+import libs.mvc.views.View;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MovieController extends Controller<Integer> implements Home, ModelManager<Movie>
+public class MovieController extends Controller<Movie, Integer, MovieDAO> implements Home
 {
+    private final MovieDAO dao = new MovieDAO();
+
     public MovieController ()
     {
         super();
+    }
+
+    @Override
+    protected MovieDAO prepareDAO ()
+    {
+        return new MovieDAO();
     }
 
     @Override
@@ -36,30 +45,40 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
     @Override
     public void show (Integer id)
     {
-        Movie Movie = em.find(Movie.class, id);
+        Movie Movie = dao.find(id);
         View  view  = new ShowMovieView(this, Movie, Movie.getScenes());
         this.setTemplateView(view);
     }
 
     @Override
+    public void showDetails (Movie model)
+    {
+
+    }
+
+    @Override
     public void showAll ()
     {
-        List<Movie>   movies = (List<Movie>) em.createQuery("FROM Movie").getResultList();
+        List<Movie>   movies = dao.all();
         AllMoviesView view   = new AllMoviesView(this, movies);
         this.setTemplateView(view);
     }
 
     /**
      * Show the dialog for the modification or the creation of the model
-     *
-     * @param model the model to update, or null for a creation
      */
     @Override
-    public void showCreationDialog (Movie model)
+    public void showCreationDialog ()
     {
-        List<Producer> producers = em.createQuery("FROM Producer").getResultList();
+        showUpdateDialog(null);
+    }
 
-        Dialog dialog = new CreateMovieDialog(this, producers);
+    @Override
+    public void showUpdateDialog (Movie movie)
+    {
+        List<Producer> producers = new ProducerDAO().all();
+
+        Dialog dialog = new CreateMovieDialog(this, movie, producers);
         DialogsManager.instance.openDialog(dialog);
     }
 
@@ -71,7 +90,7 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
     @Override
     public void showDeleteDialog (Movie model)
     {
-
+        this.showDeleteDialogForClass(model, "movie");
     }
 
     /**
@@ -82,16 +101,38 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
     @Override
     public void create (FormMap form)
     {
+        this.update(null, form);
+    }
+
+    /**
+     * Update a model and persists the changes to in the database
+     *
+     * @param model the model to update. If model is null, it will create a new instance and persist it
+     * @param form  the form with the model's data
+     */
+    @Override
+    public void update (Movie model, FormMap form)
+    {
+        if(!form.hasKeys("title", "director", "producer"))
+            throw new FormException(ErrorType.MISSING_FIELD);
+
         String   directorName = ((String) form.get("director").getValue());
         String   title        = ((String) form.get("title").getValue());
         Producer producer     = ((Producer) form.get("producer").getValue());
 
-        Movie created = new Movie(title, directorName, producer);
-        created.persist();
+        if (model == null) {
+            model = new Movie(title, directorName, producer);
+            dao.persist(model);
+        }
+        else {
+            model.setTitle(title);
+            model.setDirector(directorName);
+            model.setProducer(producer);
+        }
 
         DialogsManager.instance.closeLastOpened();
 
-        this.show(created.getId());
+        this.show(model.getId());
     }
 
     /**
@@ -102,44 +143,13 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
     @Override
     public void delete (Movie model)
     {
-    }
-
-    /**
-     * Update a model and persists the changes to in the database
-     *
-     * @param model the model to update
-     * @param form  the form with the model's data
-     */
-    @Override
-    public void update (Movie model, FormMap form)
-    {
+        dao.remove(model);
+        this.showAll();
     }
 
     public void showScenesOfMovieAtPlaceType (Movie movie, PlaceType placeType)
     {
-        System.out.println(placeType);
-        String hql;
-        if (placeType == PlaceType.THEATRE) {
-            hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = Theatre";
-        }
-        else {
-            hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = ExternalPlace";
-        }
-
-        List<Object[]> results = em.createQuery(hql).getResultList();
-        List<Scene> scenes = new ArrayList<>();
-
-        for (Object[] result : results) {
-            Scene scene = (Scene) result[0];
-            Place place = (Place) result[2];
-
-            scene.setPlace(place);
-            scenes.add(scene);
-        }
-
-        for (Scene scene : scenes) {
-            System.out.println(scene);
-        }
+        List<Scene> scenes = dao.getScenesAtPlaceType(movie.getId(), placeType);
 
         View view = new ShowMovieView(this, movie, scenes);
         setTemplateView(view);
@@ -147,11 +157,8 @@ public class MovieController extends Controller<Integer> implements Home, ModelM
 
     public void showScenesOfMovieAtDayTime (Movie movie, DayTime dayTime)
     {
-//        List<Scene> scenes = Query.forModel(Scene.class, em).whereEqual("id", movie.getId()).whereEqual("dayTime", dayTime).get();
-        List<Scene> scenes = em.createQuery("FROM Scene s WHERE s.dayTime = :dayTime AND s.movie.id = :movieId")
-                            .setParameter("dayTime", dayTime)
-                            .setParameter("movieId", movie.getId())
-                            .getResultList();
+        List<Scene> scenes = dao.getScenesAtDayTime(movie.getId(), dayTime);
+
         View view = new ShowMovieView(this, movie, scenes);
         setTemplateView(view);
     }

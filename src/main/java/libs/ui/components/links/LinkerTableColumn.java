@@ -4,8 +4,9 @@ import app.models.pk.ClapPrimaryKey;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
+import javafx.scene.control.Tooltip;
 import libs.mvc.controllers.Controller;
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import java.io.Serializable;
 
@@ -42,11 +43,13 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, PKType extend
 
                     if (empty || item == null) {
                         setText("");
+                        setTooltip(null);
                     }
                     else {
                         setText(item.toString());
 
                         TableRow tableRow = this.getTableRow();
+                        setTooltip(new Tooltip("Click here to see more details about this data"));
 
                         if (tableRow != null) {
                             ModelType model = ((ModelType) tableRow.getItem());

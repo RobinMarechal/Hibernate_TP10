@@ -1,25 +1,33 @@
 package app.controllers;
 
 import app.models.Producer;
+import app.models.dao.ProducerDAO;
 import app.views.producers.AllProducersView;
 import app.views.producers.CreateProducerDialog;
 import app.views.producers.ShowProducerView;
 import fr.polytech.marechal.FormMap;
-import libs.mvc.View;
+import fr.polytech.marechal.exceptions.ErrorType;
+import fr.polytech.marechal.exceptions.FormException;
 import libs.mvc.controllers.Controller;
 import libs.mvc.controllers.Home;
-import libs.mvc.controllers.ModelManager;
+import libs.mvc.views.View;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 
 import java.util.List;
 
-public class ProducerController extends Controller<Integer> implements Home, ModelManager<Producer>
+public class ProducerController extends Controller<Producer, Integer, ProducerDAO> implements Home
 {
 
     public ProducerController ()
     {
         super();
+    }
+
+    @Override
+    protected ProducerDAO prepareDAO ()
+    {
+        return new ProducerDAO();
     }
 
     @Override
@@ -31,28 +39,39 @@ public class ProducerController extends Controller<Integer> implements Home, Mod
     @Override
     public void show (Integer id)
     {
-        Producer producer = em.find(Producer.class, id);
-        View     view     = new ShowProducerView(this, producer);
+        Producer producer = dao.find(id);
+
+        View view = new ShowProducerView(this, producer);
         this.setTemplateView(view);
+    }
+
+    @Override
+    public void showDetails (Producer model)
+    {
+
     }
 
     @Override
     public void showAll ()
     {
-        List<Producer>   producers = (List<Producer>) em.createQuery("FROM Producer").getResultList();
+        List<Producer>   producers = dao.all();
         AllProducersView view      = new AllProducersView(this, producers);
         this.setTemplateView(view);
     }
 
     /**
      * Show the dialog for the modification or the creation of the model
-     *
-     * @param model the model to update, or null for a creation
      */
     @Override
-    public void showCreationDialog (Producer model)
+    public void showCreationDialog ()
     {
-        Dialog dialog = new CreateProducerDialog(this);
+        showUpdateDialog(null);
+    }
+
+    @Override
+    public void showUpdateDialog (Producer model)
+    {
+        Dialog dialog = new CreateProducerDialog(this, model);
         DialogsManager.instance.openDialog(dialog);
     }
 
@@ -64,7 +83,7 @@ public class ProducerController extends Controller<Integer> implements Home, Mod
     @Override
     public void showDeleteDialog (Producer model)
     {
-
+        this.showDeleteDialogForClass(model, "producer");
     }
 
     /**
@@ -75,24 +94,7 @@ public class ProducerController extends Controller<Integer> implements Home, Mod
     @Override
     public void create (FormMap form)
     {
-        String   name = ((String) form.get("name").getValue());
-
-        Producer created = new Producer(name);
-        created.persist();
-
-        DialogsManager.instance.closeLastOpened();
-
-        this.show(created.getId());
-    }
-
-    /**
-     * Delete a model instance and persists it to the database
-     *
-     * @param model the model instance to delete
-     */
-    @Override
-    public void delete (Producer model)
-    {
+        this.update(null, form);
     }
 
     /**
@@ -104,5 +106,33 @@ public class ProducerController extends Controller<Integer> implements Home, Mod
     @Override
     public void update (Producer model, FormMap form)
     {
+        if(!form.hasKeys("name"))
+            throw new FormException(ErrorType.MISSING_FIELD);
+
+        String name = ((String) form.get("name").getValue());
+
+        if (model == null) {
+            model = new Producer(name);
+            dao.persist(model);
+        }
+        else {
+            model.setName(name);
+        }
+
+        DialogsManager.instance.closeLastOpened();
+
+        this.show(model.getId());
+    }
+
+    /**
+     * Delete a model instance and persists it to the database
+     *
+     * @param model the model instance to delete
+     */
+    @Override
+    public void delete (Producer model)
+    {
+        dao.remove(model);
+        this.showAll();
     }
 }

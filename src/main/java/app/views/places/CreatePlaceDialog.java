@@ -1,6 +1,7 @@
 package app.views.places;
 
 import app.controllers.PlaceController;
+import app.models.Place;
 import fr.polytech.marechal.FieldValueType;
 import fr.polytech.marechal.FormMap;
 import javafx.geometry.Insets;
@@ -13,6 +14,7 @@ import libs.ui.components.dialogs.Dialog;
 public class CreatePlaceDialog extends Dialog
 {
     private final PlaceController controller;
+    private final Place place;
     private FormMap form;
 
     private Label dialogTitle;
@@ -40,9 +42,10 @@ public class CreatePlaceDialog extends Dialog
     /**
      * Default constructor
      */
-    public CreatePlaceDialog (PlaceController controller)
+    public CreatePlaceDialog (PlaceController controller, Place place)
     {
         super();
+        this.place = place;
         this.controller = controller;
 
         this.sizeToScene();
@@ -52,7 +55,7 @@ public class CreatePlaceDialog extends Dialog
         formBox.setPadding(new Insets(20, 40, 20, 40));
         addStylesheetTo(formBox);
 
-        dialogTitle = new Label("Creation of a place");
+        dialogTitle = new Label((place == null ? "Creation of a place" : "Update a place"));
         dialogTitle.getStyleClass().add("h2");
         dialogTitle.setMaxWidth(Double.MAX_VALUE);
         dialogTitle.setAlignment(Pos.CENTER);
@@ -98,12 +101,20 @@ public class CreatePlaceDialog extends Dialog
     {
         form = new FormMap();
 
+        if(place != null)
+        {
+            nameField.setText(place.getName());
+            addressField.setText(place.getAddress());
+            insideOutsideField.setValue(place.getType());
+            descriptionField.setText(place.getDescription());
+        }
+
         form.add("name", FieldValueType.VARCHAR, nameField, true);
         form.add("address", FieldValueType.VARCHAR, addressField, true);
         form.add("type", FieldValueType.UNDEFINED, insideOutsideField, true);
         form.add("description", FieldValueType.VARCHAR, descriptionField);
         form.setSubmitButton(submit);
 
-        form.setOnSubmit(event -> controller.create(form));
+        form.setOnSubmit(event -> controller.update(place, form));
     }
 }

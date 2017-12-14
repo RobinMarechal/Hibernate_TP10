@@ -1,7 +1,7 @@
 package app.models;
 
 import libs.PlaceType;
-import libs.mvc.Model;
+import libs.mvc.models.Model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -105,5 +105,26 @@ public abstract class Place extends Model<Integer>
     public String toString ()
     {
         return name;
+    }
+
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Place place = (Place) o;
+
+        return id == place.id && id != null && id != 0;
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return id != null ? id.hashCode() : 0;
     }
 }
