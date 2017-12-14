@@ -105,8 +105,8 @@ public class CreateMovieDialog extends Dialog
         }
 
         form.setSubmitButton(submit);
-        form.add("title", FieldValueType.VARCHAR, titleField, true);
-        form.add("director", FieldValueType.VARCHAR, directorField, true);
+        form.add("title", FieldValueType.NAME, titleField, true);
+        form.add("director", FieldValueType.NAME, directorField, true);
         form.add("producer", FieldValueType.UNDEFINED, producerField, true);
 
         form.setOnSubmit(event -> controller.update(movie, form));

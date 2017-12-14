@@ -22,7 +22,11 @@ import java.net.URL;
  */
 public class Template extends Scene
 {
-    private static Template instance = new Template();
+    public final static Template instance = new Template();
+
+    public final NavbarItem moviesNavbarItem = new NavbarItem("Movies", new MovieController());
+    public final NavbarItem producersNavbarItem = new NavbarItem("Producers", new ProducerController());
+    public final NavbarItem placesNavbarItem = new NavbarItem("Places", new PlaceController());
 
     public static Template getInstance ()
     {
@@ -85,9 +89,9 @@ public class Template extends Scene
         navbarItems = new NavbarItemList();
 
         //        navbarItems.add(new NavbarItem("Home", new MainController()));
-        navbarItems.add(new NavbarItem("Movies", new MovieController()));
-        navbarItems.add(new NavbarItem("Producers", new ProducerController()));
-        navbarItems.add(new NavbarItem("Places", new PlaceController()));
+        navbarItems.add(moviesNavbarItem);
+        navbarItems.add(producersNavbarItem);
+        navbarItems.add(placesNavbarItem);
 
         navbarItems.sort();
 

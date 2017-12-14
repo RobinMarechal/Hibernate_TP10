@@ -8,7 +8,6 @@ import app.models.Scene;
 import app.models.Setup;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -40,6 +39,8 @@ public class ShowPlaceView extends ShowView<Place, PlaceController>
     {
         super(controller, place);
 
+        removeDetailsButton();
+
         idColumn = new LinkerTableColumn<>(movieController);
         movieColumn = new LinkerTableColumn<>(movieController);
         setupsColumn = new TableColumn<>();
@@ -62,7 +63,6 @@ public class ShowPlaceView extends ShowView<Place, PlaceController>
         setupColumnFactories();
         setupColumnDimension();
 
-
         ObservableList<TableColumn<Scene, ?>> columns = scenesTable.getColumns();
         columns.addAll(idColumn);
         columns.add(movieColumn);
@@ -73,7 +73,7 @@ public class ShowPlaceView extends ShowView<Place, PlaceController>
 
     private void setupColumnHeaders ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Scene ID");
         movieColumn.setText("Movie");
         dayTimeColumn.setText("Day Time");
         setupsColumn.setText("Setups");
@@ -135,12 +135,7 @@ public class ShowPlaceView extends ShowView<Place, PlaceController>
         typeLabel.getStyleClass().add("link");
         typeLabel.setOnMouseClicked(event -> controller.showAllOfType(model.getType()));
 
-        ObservableList<Node> children = topLeftVBox.getChildren();
-        children.add(nameLabel);
-        //        children.add(idLabel);
-        children.add(addressLabel);
-        children.add(typeLabel);
-        children.add(nbScenesLabel);
+        setTopLeftComponents(nbScenesLabel, nameLabel, addressLabel, typeLabel);
 
         nameLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");

@@ -1,6 +1,8 @@
 package app.models.dao;
 
+import app.models.ExternalPlace;
 import app.models.Place;
+import app.models.Theatre;
 import libs.PlaceType;
 import libs.mvc.models.ModelDAO;
 
@@ -16,14 +18,13 @@ public class PlaceDAO extends ModelDAO<Place, Integer>
 
     public List<Place> allOfType (PlaceType item)
     {
-        // TODO : move the code to the DAO
         String query = "FROM ";
 
         if (item == PlaceType.THEATRE) {
-            query += "Threatre";
+            query += Theatre.class.getSimpleName();
         }
         else {
-            query += "ExternalPlace";
+            query += ExternalPlace.class.getSimpleName();
         }
 
         return em.createQuery(query).getResultList();

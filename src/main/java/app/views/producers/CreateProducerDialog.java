@@ -76,7 +76,7 @@ public class CreateProducerDialog extends Dialog
             nameField.setText(producer.getName());
         }
 
-        form.add("name", FieldValueType.VARCHAR, nameField, true);
+        form.add("name", FieldValueType.NAME, nameField, true);
         form.setSubmitButton(submit);
 
         form.setOnSubmit(event -> controller.update(producer, form));

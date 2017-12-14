@@ -15,6 +15,8 @@ import libs.mvc.controllers.Controller;
 import libs.mvc.controllers.Home;
 import libs.mvc.views.View;
 import libs.ui.components.dialogs.DialogsManager;
+import libs.ui.template.Template;
+import libs.ui.template.nav.NavbarItem;
 
 import java.util.List;
 
@@ -38,8 +40,10 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
     public void show (Integer id)
     {
         Place place = dao.find(id);
-        View  view  = new ShowPlaceView(this, place);
+
+        View view = new ShowPlaceView(this, place);
         setTemplateView(view);
+        selectNabarItem();
     }
 
     @Override
@@ -52,14 +56,22 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
     public void showAll ()
     {
         List<Place> places = dao.all();
-        View        view   = new AllPlacesView(this, places);
+
+        View view = new AllPlacesView(this, places);
         setTemplateView(view);
+        selectNabarItem();
     }
 
     @Override
     public void home ()
     {
         showAll();
+    }
+
+    @Override
+    public NavbarItem getAssociatedNavbarItem ()
+    {
+        return Template.instance.placesNavbarItem;
     }
 
     /**
@@ -146,7 +158,7 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
      * @param model the model instance to delete
      */
     @Override
-    public void delete (Place model)
+    protected void delete (Place model)
     {
         dao.remove(model);
         this.showAll();

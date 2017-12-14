@@ -13,6 +13,8 @@ import libs.mvc.controllers.Home;
 import libs.mvc.views.View;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
+import libs.ui.template.Template;
+import libs.ui.template.nav.NavbarItem;
 
 import java.util.List;
 
@@ -37,12 +39,20 @@ public class ProducerController extends Controller<Producer, Integer, ProducerDA
     }
 
     @Override
+    public NavbarItem getAssociatedNavbarItem ()
+    {
+        return Template.instance.producersNavbarItem;
+    }
+
+    @Override
     public void show (Integer id)
     {
         Producer producer = dao.find(id);
 
         View view = new ShowProducerView(this, producer);
         this.setTemplateView(view);
+        selectNabarItem();
+
     }
 
     @Override
@@ -57,6 +67,7 @@ public class ProducerController extends Controller<Producer, Integer, ProducerDA
         List<Producer>   producers = dao.all();
         AllProducersView view      = new AllProducersView(this, producers);
         this.setTemplateView(view);
+        selectNabarItem();
     }
 
     /**

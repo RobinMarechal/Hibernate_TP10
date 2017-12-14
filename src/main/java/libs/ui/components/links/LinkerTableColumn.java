@@ -97,7 +97,7 @@ public class LinkerTableColumn<ModelType extends Model, FieldType, PKType extend
             return;
         }
 
-        if (id instanceof ClapPrimaryKey && ((ClapPrimaryKey) id).getSetupId() == 0) {
+        if (id instanceof ClapPrimaryKey && ((ClapPrimaryKey) id).getSetup() == null) {
             return;
         }
 

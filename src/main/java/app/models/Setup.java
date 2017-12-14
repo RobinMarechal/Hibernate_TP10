@@ -19,7 +19,7 @@ public class Setup extends Model<Integer>
     @ManyToOne (cascade = CascadeType.DETACH, fetch = FetchType.EAGER, optional = false)
     private Scene scene;
 
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "setup")
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "primaryKey.setup")
     private List<Clap> claps;
 
     public Setup ()

@@ -10,7 +10,6 @@ import app.models.Producer;
 import app.models.Scene;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -62,7 +61,7 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         producerLabel = new Label();
 
         scenesTable = new TableView<>();
-        idColumn = new LinkerTableColumn<>(controller);
+        idColumn = new LinkerTableColumn<>(sceneController);
         placeNameColumn = new LinkerTableColumn<>(placeController);
         nbSetupsColumn = new TableColumn<>();
         placeTypeColumn = new TableColumn<>();
@@ -103,7 +102,7 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
 
     private void setupColumnHeaders ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Scene ID");
         nbSetupsColumn.setText("Setups");
         placeTypeColumn.setText("Place Type");
         dayTimeColumn.setText("Time of Day");
@@ -174,12 +173,7 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         directorLabel.setText("Director: " + model.getDirector());
         producerLabel.setText("Produced by: " + (this.producer == null ? "null" : this.producer.getName()));
 
-        ObservableList<Node> leftChildren = topLeftVBox.getChildren();
-
-        leftChildren.add(titleLabel);
-        leftChildren.add(directorLabel);
-        leftChildren.add(producerLabel);
-        leftChildren.add(nbScenesLabel);
+        setTopLeftComponents(nbScenesLabel, titleLabel, directorLabel, producerLabel);
 
         titleLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");

@@ -21,7 +21,7 @@ public class SceneController extends Controller<Scene, Integer, SceneDAO>
     @Override
     public void show (Integer id)
     {
-
+        System.out.println("helloe");
     }
 
     @Override

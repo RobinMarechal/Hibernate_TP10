@@ -93,7 +93,7 @@ public class ShowSceneView extends View<SceneController>
 
     private void setupColumnHeaders ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Setup ID");
         descriptionColumn.setText("Description");
         clapsColumn.setText("Claps");
     }

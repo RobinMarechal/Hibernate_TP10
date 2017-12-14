@@ -102,7 +102,7 @@ public class AllPlacesView extends View<PlaceController>
 
     public void setUpColumnTitles ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Place ID");
         nameColumn.setText("Name");
         typeColumn.setText("Type");
         addressColumn.setText("Address");

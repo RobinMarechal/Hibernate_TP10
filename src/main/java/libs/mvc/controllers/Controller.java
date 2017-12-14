@@ -91,6 +91,8 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
         alert.setContentText("This can't be undone.");
         alert.setTitle("Delete a " + dataName);
 
+        alert.show();
+
         if (alert.getResult().getButtonData().isDefaultButton()) {
             delete(model);
         }
@@ -116,5 +118,5 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
      *
      * @param model the model instance to delete
      */
-    abstract public void delete (MType model);
+    protected abstract void delete (MType model);
 }

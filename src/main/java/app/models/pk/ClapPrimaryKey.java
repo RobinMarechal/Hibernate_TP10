@@ -1,24 +1,32 @@
 package app.models.pk;
 
+import app.models.Setup;
 import app.models.exceptions.ModelException;
 
-import javax.persistence.Basic;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
 public class ClapPrimaryKey implements Serializable
 {
     @Basic
+    @GeneratedValue (strategy = GenerationType.TABLE)
     private int number;
 
-    @Basic
-    private int setupId;
+    @ManyToOne
+    private Setup setup;
 
-    public ClapPrimaryKey (int number, int setupId)
+    public ClapPrimaryKey (Setup setup, int number)
     {
-        this.number = number;
-        this.setupId = setupId;
+        this(setup);
+        if (number <= 0) {
+            this.number = number;
+        }
+    }
+
+    public ClapPrimaryKey (Setup setup)
+    {
+        this.setup = setup;
     }
 
     public ClapPrimaryKey ()
@@ -30,34 +38,34 @@ public class ClapPrimaryKey implements Serializable
         return number;
     }
 
-    public int getSetupId ()
+    public Setup getSetup ()
     {
-        return setupId;
+        return setup;
     }
 
     /**
      * Set the clap's number.
-     * @<b>WARNING: Once the number has been set, you can't change it. Doing so will throw a {@link ModelException}</b>
      *
      * @param number the number of the clap
      * @throws ModelException if the number has already been set
+     * @<b>WARNING: Once the number has been set, you can't change it. Doing so will throw a {@link ModelException}</b>
      */
     public void setNumero (int number)
     {
-        if (this.number != -1) {
+        if (this.number != 0) {
             throw new ModelException("Once the number has been set, you can't change it.");
         }
 
         this.number = number;
     }
 
-    public void setSetupId (int setupId)
+    public void setSetup (Setup setup)
     {
-        if (this.setupId == -1) {
-            throw new ModelException("One the setupId has been set, you can't change it");
+        if (this.setup != null) {
+            throw new ModelException("One the setup has been set, you can't change it");
         }
 
-        this.setupId = setupId;
+        this.setup = setup;
     }
 
     @Override
@@ -69,20 +77,18 @@ public class ClapPrimaryKey implements Serializable
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         ClapPrimaryKey that = (ClapPrimaryKey) o;
-
-        if (number != that.number) {
-            return false;
-        }
-        return setupId == that.setupId && setupId != 0 && number != 0;
+        return number != 0 && number == that.number && setup != null && setup.equals(that.setup);
     }
 
     @Override
     public int hashCode ()
     {
-        int result = number;
-        result = 31 * result + setupId;
-        return result;
+        int hashcode = number;
+        if (setup != null) {
+            hashcode += 31 * setup.hashCode();
+        }
+
+        return hashcode;
     }
 }

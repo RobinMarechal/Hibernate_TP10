@@ -1,5 +1,6 @@
 package app.models;
 
+import app.models.exceptions.ModelException;
 import libs.PlaceType;
 import libs.mvc.models.Model;
 
@@ -9,11 +10,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Place extends Model<Integer>
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Basic
@@ -126,5 +127,35 @@ public abstract class Place extends Model<Integer>
     public int hashCode ()
     {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public Theatre toTheatre()
+    {
+        if(this instanceof ExternalPlace)
+            throw new ModelException("Can't transform a ExternalPlace's instance to a Theatre's instance");
+
+        Place t = new Theatre();
+        t.id = this.id;
+        t.address = this.address;
+        t.name = this.name;
+        t.description = this.description;
+        t.scenes = this.scenes;
+
+        return (Theatre) t;
+    }
+
+    public ExternalPlace toExternalPlace()
+    {
+        if(this instanceof Theatre)
+            throw new ModelException("Can't transform a Theatre's instance to a ExternalPlace's instance");
+
+        Place t = new ExternalPlace();
+        t.id = this.id;
+        t.address = this.address;
+        t.name = this.name;
+        t.description = this.description;
+        t.scenes = this.scenes;
+
+        return (ExternalPlace) t;
     }
 }

@@ -20,7 +20,6 @@ public class ShowProducerView extends ShowView<Producer, ProducerController>
 {
     private final MovieController movieController = new MovieController();
 
-
     private Label nameLabel = new Label();
     private Label idLabel = new Label();
     private Label nbMoviesLabel = new Label();
@@ -34,6 +33,8 @@ public class ShowProducerView extends ShowView<Producer, ProducerController>
     public ShowProducerView (ProducerController controller, Producer producer)
     {
         super(controller, producer);
+
+        removeDetailsButton();
 
         idColumn = new LinkerTableColumn<>(movieController);
         titleColumn = new LinkerTableColumn<>(movieController);
@@ -65,7 +66,7 @@ public class ShowProducerView extends ShowView<Producer, ProducerController>
 
     private void setupColumnHeaders ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Movie ID");
         titleColumn.setText("Title");
         directorColumn.setText("Director");
         scenesColumn.setText("Scenes");
@@ -108,7 +109,8 @@ public class ShowProducerView extends ShowView<Producer, ProducerController>
         idLabel.setText("ID: " + model.getId());
         nbMoviesLabel.setText("Movies:");
 
-        topLeftVBox.getChildren().addAll(nameLabel/*, idLabel*/, nbMoviesLabel);
+//        topLeftVBox.getChildren().addAll(nameLabel/*, idLabel*/, nbMoviesLabel);
+        setTopLeftComponents(nbMoviesLabel, nameLabel);
 
         nameLabel.getStyleClass().add("h2");
         idLabel.getStyleClass().addAll("p", "text-italic");

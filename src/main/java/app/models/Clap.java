@@ -1,10 +1,13 @@
 package app.models;
 
+import app.models.dao.ClapDAO;
 import app.models.pk.ClapPrimaryKey;
 import libs.mvc.models.Model;
 
-import javax.persistence.*;
-import java.time.Duration;
+import javax.persistence.Basic;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 @Entity
 public class Clap extends Model<ClapPrimaryKey>
@@ -13,20 +16,17 @@ public class Clap extends Model<ClapPrimaryKey>
     private ClapPrimaryKey primaryKey;
 
     @Basic
-    private Duration duration;
-
-    @ManyToOne (cascade = CascadeType.DETACH)
-    private Setup setup;
+    private Integer duration;
 
     public Clap ()
     {
     }
 
-    public Clap (Duration duration, Setup setup)
+    public Clap (Setup setup, Integer duration)
     {
         this();
         this.duration = duration;
-        this.setup = setup;
+        this.primaryKey = new ClapPrimaryKey(setup);
     }
 
     public ClapPrimaryKey getPrimaryKey ()
@@ -34,24 +34,33 @@ public class Clap extends Model<ClapPrimaryKey>
         return primaryKey;
     }
 
-    public Duration getDuration ()
+    public Integer getDuration ()
     {
         return duration;
     }
 
-    public void setDuration (Duration duration)
+    public void setDuration (Integer duration)
     {
         this.duration = duration;
     }
 
     public Setup getSetup ()
     {
-        return setup;
+        return this.primaryKey.getSetup();
     }
 
     void setSetup (Setup setup)
     {
-        this.setup = setup;
+        ClapDAO dao = new ClapDAO();
+        if(primaryKey != null)
+            dao.remove(this);
+
+        primaryKey = new ClapPrimaryKey(setup);
+    }
+
+    public int getNumero ()
+    {
+        return this.primaryKey.getNumero();
     }
 
     @Transient

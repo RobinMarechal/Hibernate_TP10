@@ -81,7 +81,7 @@ public class AllMoviesView extends View<MovieController>
 
     public void setUpColumnTitles ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Movie ID");
         titleColumn.setText("Title");
         directorColumn.setText("Director");
         producerColumn.setText("Producer");

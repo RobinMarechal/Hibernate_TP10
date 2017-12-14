@@ -1,8 +1,6 @@
 package app.models.dao;
 
-import app.models.Movie;
-import app.models.Place;
-import app.models.Scene;
+import app.models.*;
 import libs.DayTime;
 import libs.PlaceType;
 import libs.mvc.models.ModelDAO;
@@ -23,21 +21,29 @@ public class MovieDAO extends ModelDAO<Movie, Integer>
     {
         String hql;
         if (placeType == PlaceType.THEATRE) {
-            hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = Theatre";
+            //            hql = "from Scene s inner join s.movie ON s.movie.id = :movieId inner join s.place p where type(p) = Theatre";
+            hql = "from Theatre p inner join p.scenes s inner join s.movie where s.movie.id = :movieId";
         }
         else {
-            hql = "FROM Scene s INNER JOIN s.movie ON s.movie.id = 2 INNER JOIN s.place p WHERE p.class = ExternalPlace";
+            //            hql = "from Scene s inner join s.movie ON s.movie.id = :movieId inner join s.place p where type(p) = ExternalPlace";
+            hql = "from ExternalPlace p inner join p.scenes s inner join s.movie where s.movie.id = :movieId";
         }
 
-        List<Object[]> results = em.createQuery(hql).getResultList();
+        List<Object[]> results = em.createQuery(hql).setParameter("movieId", id).getResultList();
         List<Scene>    scenes  = new ArrayList<>();
 
         for (Object[] result : results) {
-            Scene scene = (Scene) result[0]; // first in the query
-            Place place = (Place) result[2]; // 3rd in the query
-            // We don't care about the movie
+            Scene scene = (Scene) result[1];
 
-            scene.setPlace(place);
+            if (placeType == PlaceType.EXTERNAL_PLACE) {
+                ExternalPlace place = (ExternalPlace) result[0];
+                scene.setPlace(place, scene.getDayTime());
+            }
+            else {
+                Theatre place = (Theatre) result[0];
+                scene.setPlace(place);
+            }
+
             scenes.add(scene);
         }
 
@@ -46,7 +52,7 @@ public class MovieDAO extends ModelDAO<Movie, Integer>
 
     public List<Scene> getScenesAtDayTime (Integer id, DayTime dayTime)
     {
-        return em.createQuery("FROM Scene s WHERE s.dayTime = :dayTime AND s.movie.id = :movieId")
+        return em.createQuery("from Scene s where s.dayTime = :dayTime AND s.movie.id = :movieId")
                  .setParameter("dayTime", dayTime)
                  .setParameter("movieId", id)
                  .getResultList();

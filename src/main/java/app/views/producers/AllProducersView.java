@@ -74,7 +74,7 @@ public class AllProducersView extends View<ProducerController>
 
     public void setUpColumnTitles ()
     {
-        idColumn.setText("ID");
+        idColumn.setText("Producer ID");
         nameColumn.setText("Name");
         nbMoviesColumn.setText("Movies");
     }

@@ -1,12 +1,11 @@
 package app.controllers;
 
-import app.models.Movie;
-import app.models.Producer;
-import app.models.Scene;
+import app.models.*;
 import app.models.dao.MovieDAO;
 import app.models.dao.ProducerDAO;
 import app.views.movies.AllMoviesView;
 import app.views.movies.CreateMovieDialog;
+import app.views.movies.MovieDetailsDialog;
 import app.views.movies.ShowMovieView;
 import fr.polytech.marechal.FormMap;
 import fr.polytech.marechal.exceptions.ErrorType;
@@ -18,7 +17,11 @@ import libs.mvc.controllers.Home;
 import libs.mvc.views.View;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
+import libs.ui.template.Template;
+import libs.ui.template.nav.NavbarItem;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MovieController extends Controller<Movie, Integer, MovieDAO> implements Home
@@ -43,17 +46,61 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
     }
 
     @Override
+    public NavbarItem getAssociatedNavbarItem ()
+    {
+        return Template.instance.moviesNavbarItem;
+    }
+
+    @Override
     public void show (Integer id)
     {
         Movie Movie = dao.find(id);
         View  view  = new ShowMovieView(this, Movie, Movie.getScenes());
         this.setTemplateView(view);
+        selectNabarItem();
     }
 
     @Override
     public void showDetails (Movie model)
     {
+        List<Scene> scenes;
+        List<Setup> setups;
+        List<Clap>  claps;
 
+        long nbScenes;
+        long nbSetups;
+        long nbClaps;
+        long nbTheatres;
+        long nbOutside;
+        long totalClapDuration;
+        long nbScenesByNight;
+        long nbScenesByDay;
+
+        scenes = model.getScenes();
+        nbScenes = scenes.size();
+
+        nbTheatres = scenes.stream().filter(scene -> scene.getPlace().getType() == PlaceType.THEATRE).count();
+        nbOutside = scenes.stream().filter(scene -> scene.getPlace().getType() == PlaceType.EXTERNAL_PLACE).count();
+        setups = scenes.stream().map(Scene::getSetups).collect(ArrayList::new, List::addAll, List::addAll);
+        claps = setups.stream().map(Setup::getClaps).collect(ArrayList::new, List::addAll, List::addAll);
+        totalClapDuration = claps.stream().map(Clap::getDuration).reduce((d1, d2) -> d1 + d2).get();
+        nbScenesByNight = scenes.stream().filter(scene -> scene.getDayTime() == DayTime.NIGHT).count();
+        nbScenesByDay = nbOutside - nbScenesByNight;
+        nbSetups = setups.size();
+        nbClaps = claps.size();
+
+        HashMap<String, Long> details = new HashMap<>();
+        details.put("nbScenes", nbScenes);
+        details.put("nbTheatres", nbTheatres);
+        details.put("nbOutside", nbOutside);
+        details.put("nbScenesByDay", nbScenesByDay);
+        details.put("nbScenesByNight", nbScenesByNight);
+        details.put("nbSetups", nbSetups);
+        details.put("nbClaps", nbClaps);
+        details.put("totalClapDuration", totalClapDuration);
+
+        Dialog dialog = new MovieDetailsDialog(this, model, details);
+        DialogsManager.instance.openDialog(dialog);
     }
 
     @Override
@@ -62,6 +109,7 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
         List<Movie>   movies = dao.all();
         AllMoviesView view   = new AllMoviesView(this, movies);
         this.setTemplateView(view);
+        selectNabarItem();
     }
 
     /**
@@ -113,8 +161,9 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
     @Override
     public void update (Movie model, FormMap form)
     {
-        if(!form.hasKeys("title", "director", "producer"))
+        if (!form.hasKeys("title", "director", "producer")) {
             throw new FormException(ErrorType.MISSING_FIELD);
+        }
 
         String   directorName = ((String) form.get("director").getValue());
         String   title        = ((String) form.get("title").getValue());

@@ -5,7 +5,8 @@ import java.io.Serializable;
 public enum DayTime implements Serializable
 {
     NIGHT("Night"),
-    DAY("Day");
+    DAY("Day"),
+    NULL("");
 
     private String value;
 

@@ -1,6 +1,8 @@
 package app.models;
 
+import app.models.exceptions.ModelException;
 import libs.DayTime;
+import libs.PlaceType;
 import libs.mvc.models.Model;
 
 import javax.persistence.*;
@@ -19,7 +21,8 @@ public class Scene extends Model<Integer>
 
     @Basic
     @Enumerated (EnumType.STRING)
-    private DayTime dayTime = DayTime.DAY;
+
+    private DayTime dayTime = DayTime.NULL;
 
     @ManyToOne (optional = false)
     private Movie movie;
@@ -43,14 +46,16 @@ public class Scene extends Model<Integer>
 
     public Scene (Movie movie, Place place)
     {
-        this(movie);
-        setPlace(place);
+        this(movie, place, null);
     }
 
     public Scene (Movie movie, Place place, DayTime dayTime)
     {
-        this(movie, place);
-        this.dayTime = dayTime;
+        this(movie);
+        if(place.getType() == PlaceType.THEATRE)
+            setPlace((Theatre) place);
+        else
+            setPlace((ExternalPlace) place, dayTime);
     }
 
 
@@ -96,7 +101,7 @@ public class Scene extends Model<Integer>
         this.description = description;
     }
 
-    public void setDayTime (DayTime dayTime)
+    void setDayTime (DayTime dayTime)
     {
         this.dayTime = dayTime;
     }
@@ -106,11 +111,29 @@ public class Scene extends Model<Integer>
         this.movie = movie;
     }
 
-    public void setPlace (Place place)
+    public void setPlace (Theatre theatre)
     {
-        if (place != null && this.place != place) {
-            this.place = place;
-            place.addScenes(this);
+        if (theatre != null && !this.place.equals(theatre)) {
+            this.place = theatre;
+            theatre.addScenes(this);
+        }
+    }
+
+    public void setPlace (ExternalPlace externalPlace)
+    {
+        setPlace(externalPlace, DayTime.DAY);
+    }
+
+    public void setPlace (ExternalPlace externalPlace, DayTime dayTime)
+    {
+        if (externalPlace != null && !this.place.equals(externalPlace)) {
+            if(dayTime == null)
+                throw new ModelException("The daytime must not be null for external places");
+
+            this.dayTime = dayTime;
+            this.place = externalPlace;
+            externalPlace.addScenes(this);
+
         }
     }
 
