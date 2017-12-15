@@ -30,12 +30,22 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
         super();
     }
 
+    /**
+     * Get the controlled model's DAO instance
+     *
+     * @return the controlled model's DAO instance
+     */
     @Override
     protected PlaceDAO getDao ()
     {
         return new PlaceDAO();
     }
 
+    /**
+     * Show the view that displays one model's instance
+     *
+     * @param id the primary key
+     */
     @Override
     public void show (Integer id)
     {
@@ -52,6 +62,9 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
 
     }
 
+    /**
+     * Show the view that displays the list of data
+     */
     @Override
     public void showAll ()
     {
@@ -62,12 +75,20 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
         selectNabarItem();
     }
 
+    /**
+     * Show the data's home
+     */
     @Override
     public void home ()
     {
         showAll();
     }
 
+
+    /**
+     * Get the associated navbar item
+     * @return the associated navbar item
+     */
     @Override
     public NavbarItem getAssociatedNavbarItem ()
     {

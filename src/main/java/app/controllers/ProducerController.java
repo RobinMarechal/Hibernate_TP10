@@ -26,24 +26,42 @@ public class ProducerController extends Controller<Producer, Integer, ProducerDA
         super();
     }
 
+    /**
+     * Get the controlled model's DAO instance
+     *
+     * @return the controlled model's DAO instance
+     */
     @Override
     protected ProducerDAO getDao ()
     {
         return new ProducerDAO();
     }
 
+    /**
+     * Show the data's home
+     */
     @Override
     public void home ()
     {
         showAll();
     }
 
+
+    /**
+     * Get the associated navbar item
+     * @return the associated navbar item
+     */
     @Override
     public NavbarItem getAssociatedNavbarItem ()
     {
         return Template.instance.producersNavbarItem;
     }
 
+    /**
+     * Show the view that displays one model's instance
+     *
+     * @param id the primary key
+     */
     @Override
     public void show (Integer id)
     {
@@ -61,6 +79,9 @@ public class ProducerController extends Controller<Producer, Integer, ProducerDA
 
     }
 
+    /**
+     * Show the view that displays the list of data
+     */
     @Override
     public void showAll ()
     {

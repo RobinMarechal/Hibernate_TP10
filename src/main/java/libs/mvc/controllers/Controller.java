@@ -13,9 +13,10 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * Abstract model controller
- *
- * @param <ModelPKType> the type of the model's primary key
+ * Abstract controller class
+ * @param <MType> The controlled model class' type
+ * @param <ModelPKType> the type of the controlled model's primary key
+ * @param <DaoType> the DAO type associated to the controlled model
  */
 public abstract class Controller<MType extends Model, ModelPKType extends Serializable, DaoType extends ModelDAO>
 {
@@ -34,6 +35,10 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
         this.dao = getDao();
     }
 
+    /**
+     * Get the controlled model's DAO instance
+     * @return the controlled model's DAO instance
+     */
     abstract protected DaoType getDao ();
 
     /**

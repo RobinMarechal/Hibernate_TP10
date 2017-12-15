@@ -37,24 +37,42 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
         super();
     }
 
+    /**
+     * Get the controlled model's DAO instance
+     *
+     * @return the controlled model's DAO instance
+     */
     @Override
     protected MovieDAO getDao ()
     {
         return new MovieDAO();
     }
 
+    /**
+     * Show the data's home
+     */
     @Override
     public void home ()
     {
         this.showAll();
     }
 
+
+    /**
+     * Get the associated navbar item
+     * @return the associated navbar item
+     */
     @Override
     public NavbarItem getAssociatedNavbarItem ()
     {
         return Template.instance.moviesNavbarItem;
     }
 
+    /**
+     * Show the view that displays one model's instance
+     *
+     * @param id the primary key
+     */
     @Override
     public void show (Integer id)
     {
@@ -107,6 +125,9 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
         DialogsManager.instance.openDialog(dialog);
     }
 
+    /**
+     * Show the view that displays the list of data
+     */
     @Override
     public void showAll ()
     {

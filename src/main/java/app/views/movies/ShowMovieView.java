@@ -159,12 +159,12 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
 
     private void setupColumnDimension ()
     {
-        setSizeOfColumnInTable(idColumn, scenesTable, 10);
-        setSizeOfColumnInTable(nbSetupsColumn, scenesTable, 10);
-        setSizeOfColumnInTable(placeTypeColumn, scenesTable, 22);
-        setSizeOfColumnInTable(dayTimeColumn, scenesTable, 12);
-        setSizeOfColumnInTable(placeIdColumn, scenesTable, 10);
-        setSizeOfColumnInTable(placeNameColumn, scenesTable, 36);
+        setSizeOfColumnInTable(idColumn, 10);
+        setSizeOfColumnInTable(nbSetupsColumn, 10);
+        setSizeOfColumnInTable(placeTypeColumn, 22);
+        setSizeOfColumnInTable(dayTimeColumn, 12);
+        setSizeOfColumnInTable(placeIdColumn, 10);
+        setSizeOfColumnInTable(placeNameColumn, 36);
     }
 
     public void setupLabels ()

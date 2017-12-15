@@ -126,9 +126,9 @@ public class ShowSceneView extends ShowView<Scene, SceneController>
 
     private void setupColumnDimension ()
     {
-        setSizeOfColumnInTable(setupIdColumn, setupsTable, 15);
-        setSizeOfColumnInTable(clapsColumn, setupsTable, 15);
-        setSizeOfColumnInTable(descriptionColumn, setupsTable, 70);
+        setSizeOfColumnInTable(setupIdColumn, 15);
+        setSizeOfColumnInTable(clapsColumn, 15);
+        setSizeOfColumnInTable(descriptionColumn, 70);
     }
 
     private void setupTopPart ()

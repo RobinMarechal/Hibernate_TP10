@@ -118,10 +118,10 @@ public class ShowPlaceView extends ShowView<Place, PlaceController>
 
     private void setupColumnDimension ()
     {
-        setSizeOfColumnInTable(idColumn, scenesTable, 15);
-        setSizeOfColumnInTable(movieColumn, scenesTable, 50);
-        setSizeOfColumnInTable(dayTimeColumn, scenesTable, 20);
-        setSizeOfColumnInTable(setupsColumn, scenesTable, 15);
+        setSizeOfColumnInTable(idColumn, 15);
+        setSizeOfColumnInTable(movieColumn, 50);
+        setSizeOfColumnInTable(dayTimeColumn, 20);
+        setSizeOfColumnInTable(setupsColumn, 15);
     }
 
     private void setupTopPart ()

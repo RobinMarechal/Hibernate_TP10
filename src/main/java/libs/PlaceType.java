@@ -1,5 +1,8 @@
 package libs;
 
+/**
+ * Enum containing the place types possibilities
+ */
 public enum PlaceType
 {
     THEATRE("Theatre"),

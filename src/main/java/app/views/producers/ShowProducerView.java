@@ -97,10 +97,10 @@ public class ShowProducerView extends ShowView<Producer, ProducerController>
 
     private void setupColumnDimension ()
     {
-        setSizeOfColumnInTable(idColumn, moviesTable, 15);
-        setSizeOfColumnInTable(titleColumn, moviesTable, 35);
-        setSizeOfColumnInTable(directorColumn, moviesTable, 35);
-        setSizeOfColumnInTable(scenesColumn, moviesTable, 14);
+        setSizeOfColumnInTable(idColumn, 15);
+        setSizeOfColumnInTable(titleColumn, 35);
+        setSizeOfColumnInTable(directorColumn, 35);
+        setSizeOfColumnInTable(scenesColumn, 14);
     }
 
     private void setupTopPart ()

@@ -25,12 +25,22 @@ public class SceneController extends Controller<Scene, Integer, SceneDAO>
         super();
     }
 
+    /**
+     * Get the controlled model's DAO instance
+     *
+     * @return the controlled model's DAO instance
+     */
     @Override
     protected SceneDAO getDao ()
     {
         return new SceneDAO();
     }
 
+    /**
+     * Show the view that displays one model's instance
+     *
+     * @param id the primary key
+     */
     @Override
     public void show (Integer id)
     {
@@ -39,6 +49,11 @@ public class SceneController extends Controller<Scene, Integer, SceneDAO>
         this.setTemplateView(view);
     }
 
+    /**
+     * Show the details of a model instance
+     *
+     * @param scene the model instance
+     */
     @Override
     public void showDetails (Scene scene)
     {
@@ -66,6 +81,9 @@ public class SceneController extends Controller<Scene, Integer, SceneDAO>
         DialogsManager.instance.openDialog(dialog);
     }
 
+    /**
+     * Show the view that displays the list of data
+     */
     @Override
     public void showAll ()
     {

@@ -1,5 +1,8 @@
 package app.models.exceptions;
 
+/**
+ * Exception class for the models package
+ */
 public class ModelException extends RuntimeException
 {
     public ModelException ()

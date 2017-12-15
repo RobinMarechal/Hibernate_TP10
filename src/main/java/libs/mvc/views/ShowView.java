@@ -81,9 +81,9 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
     }
 
     @Override
-    protected void setSizeOfColumnInTable (TableColumn column, Region container, double percentageWidth)
+    protected void setSizeOfColumnInTable (TableColumn column, double percentageWidth)
     {
-        setSizeOfColumnInTable(column, container, percentageWidth, 10);
+        setSizeOfColumnInTable(column, percentageWidth, 10);
     }
 
     public void removeDetailsButton ()

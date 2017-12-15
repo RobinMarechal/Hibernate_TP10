@@ -9,8 +9,17 @@ import org.hibernate.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO class for the Movies
+ */
 public class MovieDAO extends ModelDAO<Movie, Integer>
 {
+
+    /**
+     * Getter for the Model's class
+     *
+     * @return the model's class
+     */
     @Override
     public Class<Movie> getModelClazz ()
     {
@@ -18,19 +27,23 @@ public class MovieDAO extends ModelDAO<Movie, Integer>
     }
 
 
-    public List<Scene> getScenesAtPlaceType (Integer id, PlaceType placeType)
+    /**
+     * Retrieve the scenes of a movie that take place at a type of place (Theatre or External Place)
+     * @param movieId the id of the movie
+     * @param placeType the type of place
+     * @return a list of records
+     */
+    public List<Scene> getScenesAtPlaceType (Integer movieId, PlaceType placeType)
     {
         String hql;
         if (placeType == PlaceType.THEATRE) {
-            //            hql = "from Scene s inner join s.movie ON s.movie.id = :movieId inner join s.place p where type(p) = Theatre";
             hql = "from Theatre p inner join p.scenes s inner join s.movie where s.movie.id = :movieId";
         }
         else {
-            //            hql = "from Scene s inner join s.movie ON s.movie.id = :movieId inner join s.place p where type(p) = ExternalPlace";
             hql = "from ExternalPlace p inner join p.scenes s inner join s.movie where s.movie.id = :movieId";
         }
 
-        List<Object[]> results = em.createQuery(hql).setParameter("movieId", id).getResultList();
+        List<Object[]> results = em.createQuery(hql).setParameter("movieId", movieId).getResultList();
         List<Scene>    scenes  = new ArrayList<>();
 
         for (Object[] result : results) {
@@ -53,11 +66,17 @@ public class MovieDAO extends ModelDAO<Movie, Integer>
         return scenes;
     }
 
-    public List<Scene> getScenesAtDayTime (Integer id, DayTime dayTime)
+    /**
+     * Retrieve the scenes of a movie that take place at a specific day time
+     * @param movieId the id of the movie
+     * @param dayTime the day time
+     * @return a list of records
+     */
+    public List<Scene> getScenesAtDayTime (Integer movieId, DayTime dayTime)
     {
         return em.createQuery("from Scene s where s.dayTime = :dayTime AND s.movie.id = :movieId")
                  .setParameter("dayTime", dayTime)
-                 .setParameter("movieId", id)
+                 .setParameter("movieId", movieId)
                  .getResultList();
     }
 }

@@ -2,6 +2,9 @@ package libs;
 
 import java.io.Serializable;
 
+/**
+ * Enum containing the day time possibilities
+ */
 public enum DayTime implements Serializable
 {
     NIGHT("Night"),
