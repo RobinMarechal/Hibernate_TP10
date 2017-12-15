@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Producer is the class representing a producer of a movie
+ * Producer is the class representing the producer of a movie
  * @author Robin Marechal
  * @author Pierre Vende
  *
