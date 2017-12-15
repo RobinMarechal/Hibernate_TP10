@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.StageStyle;
 import libs.ui.template.Template;
 
 import java.net.URL;
@@ -21,12 +20,12 @@ public abstract class Dialog extends javafx.stage.Stage
      */
     public Dialog ()
     {
-        initStyle(StageStyle.UTILITY);
-        prepareDialogEventListeners();
+//        initStyle(StageStyle.UTILITY);
+//        prepareDialogEventListeners();
         setResizable(false);
     }
 
-    protected void addStylesheetTo (Pane pane)
+    protected void addStylesheetsTo (Pane pane)
     {
         URL jbootx = Template.class.getResource("/css/jbootx.css");
         if (jbootx != null) {
@@ -64,6 +63,9 @@ public abstract class Dialog extends javafx.stage.Stage
      */
     protected void setContent (Pane content)
     {
-        setScene(new Scene(content));
+        if (content != null) {
+            addStylesheetsTo(content);
+            setScene(new Scene(content));
+        }
     }
 }

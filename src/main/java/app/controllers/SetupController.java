@@ -13,7 +13,7 @@ public class SetupController extends Controller<Setup, Integer, SetupDAO>
     }
 
     @Override
-    protected SetupDAO prepareDAO ()
+    protected SetupDAO getDao ()
     {
         return new SetupDAO();
     }
@@ -21,7 +21,7 @@ public class SetupController extends Controller<Setup, Integer, SetupDAO>
     @Override
     public void show (Integer id)
     {
-
+        System.out.println("Showing setup n°" + id + "...");
     }
 
     @Override

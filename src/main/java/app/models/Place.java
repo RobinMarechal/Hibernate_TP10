@@ -1,8 +1,8 @@
 package app.models;
 
-import app.models.exceptions.ModelException;
 import libs.PlaceType;
 import libs.mvc.models.Model;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -204,6 +204,7 @@ public abstract class Place extends Model<Integer>
         if (this == o) {
             return true;
         }
+        o = Hibernate.unproxy(o);
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -223,43 +224,43 @@ public abstract class Place extends Model<Integer>
         return id != null ? id.hashCode() : 0;
     }
 
-    /**
-     * Convert the place into a Theatre object
-     * @throws ModelException Can't transform a ExternalPlace's instance to a Theatre's instance
-     * @return converted object
-     */
-    public Theatre toTheatre()
-    {
-        if(this instanceof ExternalPlace)
-            throw new ModelException("Can't transform a ExternalPlace's instance to a Theatre's instance");
-
-        Place t = new Theatre();
-        t.id = this.id;
-        t.address = this.address;
-        t.name = this.name;
-        t.description = this.description;
-        t.scenes = this.scenes;
-
-        return (Theatre) t;
-    }
-
-    /**
-     * Convert the place into a ExternalPlace object
-     * @throws ModelException Can't transform a Theatre's instance to a ExternalPlace's instance
-     * @return converted object
-     */
-    public ExternalPlace toExternalPlace()
-    {
-        if(this instanceof Theatre)
-            throw new ModelException("Can't transform a Theatre's instance to a ExternalPlace's instance");
-
-        Place t = new ExternalPlace();
-        t.id = this.id;
-        t.address = this.address;
-        t.name = this.name;
-        t.description = this.description;
-        t.scenes = this.scenes;
-
-        return (ExternalPlace) t;
-    }
+//    /**
+//     * Convert the place into a Theatre object
+//     * @throws ModelException Can't transform a ExternalPlace's instance to a Theatre's instance
+//     * @return converted object
+//     */
+//    public Theatre toTheatre()
+//    {
+//        if(this instanceof ExternalPlace)
+//            throw new ModelException("Can't transform a ExternalPlace's instance to a Theatre's instance");
+//
+//        Place t = new Theatre();
+//        t.id = this.id;
+//        t.address = this.address;
+//        t.name = this.name;
+//        t.description = this.description;
+//        t.scenes = this.scenes;
+//
+//        return (Theatre) t;
+//    }
+//
+//    /**
+//     * Convert the place into a ExternalPlace object
+//     * @throws ModelException Can't transform a Theatre's instance to a ExternalPlace's instance
+//     * @return converted object
+//     */
+//    public ExternalPlace toExternalPlace()
+//    {
+//        if(this instanceof Theatre)
+//            throw new ModelException("Can't transform a Theatre's instance to a ExternalPlace's instance");
+//
+//        Place t = new ExternalPlace();
+//        t.id = this.id;
+//        t.address = this.address;
+//        t.name = this.name;
+//        t.description = this.description;
+//        t.scenes = this.scenes;
+//
+//        return (ExternalPlace) t;
+//    }
 }

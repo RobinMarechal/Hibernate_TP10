@@ -42,7 +42,7 @@ public class CreateProducerDialog extends Dialog
         formBox = new VBox(20);
         formBox.getStyleClass().add("form");
         formBox.setPadding(new Insets(20, 40, 20, 40));
-        addStylesheetTo(formBox);
+        addStylesheetsTo(formBox);
 
         dialogTitle = new Label((producer == null ? "Creation of a producer" : "Update producer"));
         dialogTitle.getStyleClass().add("h2");

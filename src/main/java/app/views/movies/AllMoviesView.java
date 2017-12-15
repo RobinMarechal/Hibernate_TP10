@@ -91,10 +91,10 @@ public class AllMoviesView extends View<MovieController>
     public void setUpColumnDimensions ()
     {
         idColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.10);
-        titleColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.27);
-        directorColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.27);
-        producerColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.27);
-        scenesColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.09);
+        titleColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.32);
+        directorColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.24);
+        producerColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.24);
+        scenesColumn.setPrefWidth(Template.CONTENT_WIDTH * 0.10);
     }
 
     @Override

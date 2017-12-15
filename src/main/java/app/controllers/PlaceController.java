@@ -31,7 +31,7 @@ public class PlaceController extends Controller<Place, Integer, PlaceDAO> implem
     }
 
     @Override
-    protected PlaceDAO prepareDAO ()
+    protected PlaceDAO getDao ()
     {
         return new PlaceDAO();
     }

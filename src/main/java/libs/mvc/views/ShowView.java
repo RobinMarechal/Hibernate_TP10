@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -12,8 +13,14 @@ import javafx.scene.layout.VBox;
 import libs.mvc.controllers.Controller;
 import libs.mvc.models.Model;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public abstract class ShowView<MType extends Model, CType extends Controller> extends View<CType>
 {
+    protected final static int BUTTON_PREF_WIDTH = 150;
+
     protected MType model;
     protected BorderPane borderPane;
 
@@ -23,6 +30,8 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
     protected Button deleteBtn;
     protected Button updateBtn;
     protected Button showDetailsBtn;
+
+    protected HashMap<Button, Boolean> mapBtn;
 
     protected VBox topLeftVBox;
     protected BorderPane topLeftBorderPane;
@@ -43,6 +52,10 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
         updateBtn = new Button("Update");
         showDetailsBtn = new Button("More details");
 
+        mapBtn = new HashMap<>();
+        mapBtn.put(showDetailsBtn, true);
+        mapBtn.put(updateBtn, true);
+        mapBtn.put(deleteBtn, true);
 
         topHbox = new HBox(topLeftBorderPane, topRightVbox);
         topHbox.setAlignment(Pos.CENTER);
@@ -67,8 +80,15 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
         prepareEventHandlers();
     }
 
+    @Override
+    protected void setSizeOfColumnInTable (TableColumn column, Region container, double percentageWidth)
+    {
+        setSizeOfColumnInTable(column, container, percentageWidth, 10);
+    }
+
     public void removeDetailsButton ()
     {
+        mapBtn.replace(showDetailsBtn, false);
         topRightVbox.getChildren().remove(showDetailsBtn);
     }
 
@@ -95,6 +115,28 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
         }
     }
 
+    protected void addButton (Button button)
+    {
+        mapBtn.put(button, true);
+        ObservableList<Node> children = topRightVbox.getChildren();
+
+        children.clear();
+
+        List<Button> activeBtns = mapBtn.entrySet().stream().filter(entry -> entry.getValue()).map(entry -> entry.getKey()).collect(Collectors.toList());
+        long         nbActives  = activeBtns.size();
+
+        if (nbActives == 4) {
+            HBox hbox = new HBox(10);
+
+            ObservableList<Node> hboxChildren = hbox.getChildren();
+            hboxChildren.addAll(new VBox(10, activeBtns.get(0), activeBtns.get(1)), new VBox(10, activeBtns.get(2), activeBtns.get(3)));
+            children.add(hbox);
+        }
+        else {
+            children.addAll(activeBtns);
+        }
+    }
+
     public void setupButtons ()
     {
         ObservableList<Node> rightChildren = topRightVbox.getChildren();
@@ -103,9 +145,9 @@ public abstract class ShowView<MType extends Model, CType extends Controller> ex
         rightChildren.add(updateBtn);
         rightChildren.add(deleteBtn);
 
-        updateBtn.setPrefWidth(150);
-        deleteBtn.setPrefWidth(150);
-        showDetailsBtn.setPrefWidth(150);
+        updateBtn.setPrefWidth(BUTTON_PREF_WIDTH);
+        deleteBtn.setPrefWidth(BUTTON_PREF_WIDTH);
+        showDetailsBtn.setPrefWidth(BUTTON_PREF_WIDTH);
 
         topRightVbox.setAlignment(Pos.CENTER);
         topRightVbox.setMaxHeight(Double.MAX_VALUE);

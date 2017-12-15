@@ -1,6 +1,7 @@
 package app.models;
 
 import libs.PlaceType;
+import org.hibernate.Hibernate;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -71,6 +72,7 @@ public class ExternalPlace extends Place
     @Override
     public boolean equals (Object o)
     {
+        o = Hibernate.unproxy(o);
         return super.equals(o) && o instanceof ExternalPlace;
     }
 

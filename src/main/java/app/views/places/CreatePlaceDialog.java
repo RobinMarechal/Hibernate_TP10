@@ -53,7 +53,7 @@ public class CreatePlaceDialog extends Dialog
         formBox = new VBox(20);
         formBox.getStyleClass().add("form");
         formBox.setPadding(new Insets(20, 40, 20, 40));
-        addStylesheetTo(formBox);
+        addStylesheetsTo(formBox);
 
         dialogTitle = new Label((place == null ? "Creation of a place" : "Update a place"));
         dialogTitle.getStyleClass().add("h2");
@@ -81,7 +81,6 @@ public class CreatePlaceDialog extends Dialog
         descriptionField = new TextArea();
         descriptionField.setPrefRowCount(5);
         descriptionFormGroup = new VBox();
-        descriptionField.setPromptText("Select a description...");
         descriptionFormGroup.getChildren().addAll(descriptionLabel, descriptionField);
 
         submit = new Button("Submit");

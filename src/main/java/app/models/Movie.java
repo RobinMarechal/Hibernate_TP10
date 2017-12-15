@@ -1,6 +1,7 @@
 package app.models;
 
 import libs.mvc.models.Model;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -113,6 +114,7 @@ public class Movie extends Model<Integer>
         if (this == o) {
             return true;
         }
+        o = Hibernate.unproxy(o);
         if (o == null || getClass() != o.getClass()) {
             return false;
         }

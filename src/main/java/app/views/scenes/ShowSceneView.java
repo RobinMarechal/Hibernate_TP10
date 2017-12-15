@@ -6,16 +6,15 @@ import app.controllers.SceneController;
 import app.controllers.SetupController;
 import app.models.*;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.StageStyle;
 import libs.DayTime;
-import libs.mvc.views.View;
+import libs.PlaceType;
+import libs.mvc.views.ShowView;
 import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 import libs.ui.components.links.LinkerTableColumn;
@@ -23,10 +22,8 @@ import libs.ui.template.Template;
 
 import java.util.List;
 
-public class ShowSceneView extends View<SceneController>
+public class ShowSceneView extends ShowView<Scene, SceneController>
 {
-    private final Scene scene;
-
     private final MovieController movieController = new MovieController();
     private final SetupController setupController = new SetupController();
     private final PlaceController placeController = new PlaceController();
@@ -36,10 +33,6 @@ public class ShowSceneView extends View<SceneController>
     private final Movie movie;
     private final DayTime dayTime;
 
-    private BorderPane borderPane = new BorderPane();
-
-    private VBox vbox = new VBox();
-
     private Label idLabel = new Label();
     private Label placeLabel = new Label();
     private Label dayTimeLabel = new Label();
@@ -48,20 +41,19 @@ public class ShowSceneView extends View<SceneController>
     private Label setupsLabel = new Label();
 
     private TableView<Setup> setupsTable = new TableView<>();
-    private LinkerTableColumn<Setup, Integer, Integer> idColumn;
+    private LinkerTableColumn<Setup, Integer, Integer> setupIdColumn;
     private TableColumn<Setup, String> descriptionColumn;
     private TableColumn<Setup, List<Clap>> clapsColumn;
 
     public ShowSceneView (SceneController controller, Scene scene)
     {
-        super(controller);
-        this.scene = scene;
+        super(controller, scene);
         this.place = scene.getPlace();
         this.setups = scene.getSetups();
         this.movie = scene.getMovie();
         this.dayTime = scene.getDayTime();
 
-        idColumn = new LinkerTableColumn<>(controller);
+        setupIdColumn = new LinkerTableColumn<>(setupController);
         clapsColumn = new TableColumn<>();
         descriptionColumn = new TableColumn<>();
 
@@ -72,7 +64,6 @@ public class ShowSceneView extends View<SceneController>
     @Override
     protected void setup ()
     {
-        setAnchorOfComponent(borderPane, 5, 5, 5, 5);
         setupTopPart();
         setupBottomPart();
     }
@@ -85,22 +76,23 @@ public class ShowSceneView extends View<SceneController>
 
 
         ObservableList<TableColumn<Setup, ?>> columns = setupsTable.getColumns();
-        columns.addAll(idColumn);
-        columns.add(descriptionColumn);
+        columns.addAll(setupIdColumn);
         columns.add(clapsColumn);
+        columns.add(descriptionColumn);
+
         borderPane.setCenter(setupsTable);
     }
 
     private void setupColumnHeaders ()
     {
-        idColumn.setText("Setup ID");
+        setupIdColumn.setText("Setup ID");
         descriptionColumn.setText("Description");
         clapsColumn.setText("Claps");
     }
 
     private void setupColumnFactories ()
     {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        setupIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         clapsColumn.setCellValueFactory(new PropertyValueFactory<>("claps"));
 
@@ -124,67 +116,75 @@ public class ShowSceneView extends View<SceneController>
                 super.updateItem(item, empty);
                 if (item != null && !empty) {
                     setTooltip(new Tooltip("Please click on the ID to see the details."));
-                }
-                else {
-                    setTooltip(null);
+                    setText(item);
                 }
             }
         });
 
-        idColumn.prepareEventHandler();
+        setupIdColumn.prepareEventHandler();
     }
 
     private void setupColumnDimension ()
     {
-        setSizeOfColumnInTable(idColumn, setupsTable, 15);
+        setSizeOfColumnInTable(setupIdColumn, setupsTable, 15);
         setSizeOfColumnInTable(clapsColumn, setupsTable, 15);
         setSizeOfColumnInTable(descriptionColumn, setupsTable, 70);
     }
 
     private void setupTopPart ()
     {
-        idLabel.setText("Scene N° " + scene.getId());
-        movieLabel.setText("" + movie);
-        descriptionLabel.setText(scene.getDescription());
-        dayTimeLabel.setText("Type: " + dayTime.toString());
+        boolean dayTimeEnabled = dayTime != null && dayTime != DayTime.NULL && place.getType() == PlaceType.EXTERNAL_PLACE;
+
+        idLabel.setText("Scene N° " + model.getId());
+        movieLabel.setText("Movie: '" + movie + "'");
+        descriptionLabel.setText(model.getDescription());
+        if (dayTimeEnabled) {
+            dayTimeLabel.setText("Type: " + dayTime.toString());
+        }
         placeLabel.setText("Place: " + place);
         setupsLabel.setText("Setups: ");
 
-        descriptionLabel.setMaxWidth(Template.CONTENT_WIDTH / 2);
+        descriptionLabel.setMaxWidth(Template.CONTENT_WIDTH / 4);
         descriptionLabel.setTooltip(new Tooltip("Please click here to see the entire description"));
 
         descriptionLabel.setOnMouseClicked(event -> {
-            Dialog dialog = new Dialog() {
+            Dialog dialog = new Dialog()
+            {
+                private TextArea textArea = new TextArea(model.getDescription());
+                private AnchorPane pane = new AnchorPane();
 
-                private TextArea textArea = new TextArea(scene.getDescription());
-                private Pane pane = new Pane();
-
+                // Anonymous class constructor
                 {
-                    setContent(pane);
-                    pane.setPadding(new Insets(20));
+                    setTitle("Description of scene n°" + model.getId());
+                    initStyle(StageStyle.UTILITY);
                     pane.getChildren().add(textArea);
                     textArea.setEditable(false);
+                    textArea.getStyleClass().add("text-pane-textarea");
+                    AnchorPane.setBottomAnchor(textArea, -3d);
+                    AnchorPane.setTopAnchor(textArea, -3d);
+                    AnchorPane.setLeftAnchor(textArea, -3d);
+                    AnchorPane.setRightAnchor(textArea, -3d);
+                    textArea.setPrefWidth(500);
+                    setContent(pane);
                 }
             };
 
             DialogsManager.instance.openDialog(dialog);
         });
 
-//        dayTimeLabel.setOnMouseClicked(event -> controller.showAllOfDayTime(dayTime));
+        setTopLeftComponents(setupsLabel, null);
 
-        ObservableList<Node> children = vbox.getChildren();
+        ObservableList<Node> children = topLeftVBox.getChildren();
         children.add(idLabel);
-        if (movie != null) {
-            children.add(movieLabel);
+        children.add(movieLabel);
+        if (dayTimeEnabled) {
+            children.add(dayTimeLabel);
         }
-        children.add(dayTimeLabel);
         if (place != null) {
             children.add(placeLabel);
         }
         children.add(descriptionLabel);
         children.add(setupsLabel);
-
-        borderPane.setTop(vbox);
 
         idLabel.getStyleClass().add("h2");
         movieLabel.getStyleClass().addAll("p", "text-italic");
@@ -211,7 +211,6 @@ public class ShowSceneView extends View<SceneController>
     @Override
     protected void display ()
     {
-        setupsTable.getItems().addAll(scene.getSetups());
-        this.addComponents(borderPane);
+        setupsTable.getItems().addAll(model.getSetups());
     }
 }

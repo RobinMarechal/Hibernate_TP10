@@ -207,3 +207,11 @@
 .submit-form-group{
     -fx-padding: 10px 0;
 }
+
+.text-pane-textarea{
+    -fx-font-size: 16px;
+}
+
+.table-column{
+    -fx-alignment: center;
+}

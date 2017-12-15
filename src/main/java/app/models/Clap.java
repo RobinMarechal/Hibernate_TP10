@@ -3,6 +3,7 @@ package app.models;
 import app.models.dao.ClapDAO;
 import app.models.pk.ClapPrimaryKey;
 import libs.mvc.models.Model;
+import org.hibernate.Hibernate;
 
 import javax.persistence.Basic;
 import javax.persistence.EmbeddedId;
@@ -77,6 +78,7 @@ public class Clap extends Model<ClapPrimaryKey>
         if (this == o) {
             return true;
         }
+        o = Hibernate.unproxy(o);
         if (o == null || getClass() != o.getClass()) {
             return false;
         }

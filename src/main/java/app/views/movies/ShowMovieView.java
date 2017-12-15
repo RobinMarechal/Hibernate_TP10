@@ -10,10 +10,7 @@ import app.models.Producer;
 import app.models.Scene;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import libs.DayTime;
 import libs.PlaceType;
@@ -38,9 +35,12 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
     private Label directorLabel;
     private Label producerLabel; // Handle Click
 
+    private Button addSceneBtn;
+
     private TableView<SceneRow> scenesTable;
     private LinkerTableColumn<SceneRow, Integer, Integer> idColumn;
     private LinkerTableColumn<SceneRow, String, Integer> placeNameColumn;
+    private LinkerTableColumn<SceneRow, Integer, Integer> placeIdColumn;
     private TableColumn<SceneRow, PlaceType> placeTypeColumn; // Handle click event
     private TableColumn<SceneRow, DayTime> dayTimeColumn; // Handle click Event
     private TableColumn<SceneRow, Integer> nbSetupsColumn;
@@ -60,8 +60,11 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         directorLabel = new Label();
         producerLabel = new Label();
 
+        addSceneBtn = new Button();
+
         scenesTable = new TableView<>();
         idColumn = new LinkerTableColumn<>(sceneController);
+        placeIdColumn = new LinkerTableColumn<>(placeController);
         placeNameColumn = new LinkerTableColumn<>(placeController);
         nbSetupsColumn = new TableColumn<>();
         placeTypeColumn = new TableColumn<>();
@@ -96,7 +99,7 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         idColumn.prepareEventHandler();
         placeNameColumn.prepareEventHandler();
 
-        scenesTable.getColumns().addAll(idColumn, nbSetupsColumn, placeTypeColumn, dayTimeColumn, placeNameColumn);
+        scenesTable.getColumns().addAll(idColumn, nbSetupsColumn, placeTypeColumn, dayTimeColumn, placeNameColumn, placeIdColumn);
         borderPane.setCenter(scenesTable);
     }
 
@@ -106,7 +109,8 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         nbSetupsColumn.setText("Setups");
         placeTypeColumn.setText("Place Type");
         dayTimeColumn.setText("Time of Day");
-        placeNameColumn.setText("Place");
+        placeNameColumn.setText("Place Name");
+        placeIdColumn.setText("Place ID");
     }
 
     private void setupColumnFactories ()
@@ -115,6 +119,7 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         nbSetupsColumn.setCellValueFactory(new PropertyValueFactory<>("nbSetups"));
         placeTypeColumn.setCellValueFactory(new PropertyValueFactory<>("placeType"));
         dayTimeColumn.setCellValueFactory(new PropertyValueFactory<>("dayTime"));
+        placeIdColumn.setCellValueFactory(new PropertyValueFactory<>("placeId"));
         placeNameColumn.setCellValueFactory(new PropertyValueFactory<>("placeName"));
 
         placeTypeColumn.setCellFactory(event -> new TableCell<SceneRow, PlaceType>()
@@ -157,8 +162,9 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         setSizeOfColumnInTable(idColumn, scenesTable, 10);
         setSizeOfColumnInTable(nbSetupsColumn, scenesTable, 10);
         setSizeOfColumnInTable(placeTypeColumn, scenesTable, 22);
-        setSizeOfColumnInTable(dayTimeColumn, scenesTable, 15);
-        setSizeOfColumnInTable(placeNameColumn, scenesTable, 43);
+        setSizeOfColumnInTable(dayTimeColumn, scenesTable, 12);
+        setSizeOfColumnInTable(placeIdColumn, scenesTable, 10);
+        setSizeOfColumnInTable(placeNameColumn, scenesTable, 36);
     }
 
     public void setupLabels ()
@@ -193,8 +199,16 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
         directorLabel.setAlignment(Pos.CENTER);
         producerLabel.setAlignment(Pos.CENTER);
 
-        topLeftVBox.setAlignment(Pos.CENTER);
-        topLeftVBox.setMaxHeight(Double.MAX_VALUE);
+        setupAddSceneButton();
+    }
+
+    private void setupAddSceneButton(){
+        addSceneBtn.setText("Add a Scene");
+        addSceneBtn.setPrefWidth(BUTTON_PREF_WIDTH);
+
+        addSceneBtn.setOnAction(event -> controller.showSceneCreationDialog(model));
+
+        addButton(addSceneBtn);
     }
 
     private List<SceneRow> getSceneRowList ()
@@ -218,10 +232,12 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
     public class SceneRow extends Model<Integer>
     {
         private final Scene scene;
+        private final Place place;
 
         public SceneRow (Scene scene)
         {
             this.scene = scene;
+            this.place = scene.getPlace();
         }
 
         public Scene getScene ()
@@ -239,13 +255,17 @@ public class ShowMovieView extends ShowView<Movie, MovieController>
 
         public String getPlaceName ()
         {
-            Place place = scene.getPlace();
             return place == null ? "" : place.getName();
+        }
+
+        public Integer getPlaceId()
+        {
+            return place == null ? null : place.getId();
         }
 
         public PlaceType getPlaceType ()
         {
-            return scene.getPlace().getType();
+            return this.place.getType();
         }
 
         public DayTime getDayTime ()

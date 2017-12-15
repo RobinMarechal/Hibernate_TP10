@@ -4,6 +4,7 @@ import app.models.exceptions.ModelException;
 import libs.DayTime;
 import libs.PlaceType;
 import libs.mvc.models.Model;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,16 +12,16 @@ import java.util.List;
 
 /**
  * Scene is the class representing a scene of a movie
+ *
  * @author Robin Marechal
  * @author Pierre Vende
- *
  */
 @Entity
 public class Scene extends Model<Integer>
 {
-	/**
-	 * Id of the Scene
-	 */
+    /**
+     * Id of the Scene
+     */
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
@@ -66,16 +67,20 @@ public class Scene extends Model<Integer>
 
     /**
      * Constructor setting the movie's scene
+     *
      * @param movie Movie where the Scene was shot
      */
     public Scene (Movie movie)
     {
         this();
-        setMovie(movie);
+        if (movie != null) {
+            movie.addScenes(this);
+        }
     }
 
     /**
      * Constructor setting the movie's scene and the place's scene
+     *
      * @param movie Movie where the Scene was shot
      * @param place Place where the Scene was shot
      */
@@ -86,24 +91,23 @@ public class Scene extends Model<Integer>
 
     /**
      * Constructor setting the movie's scene and the place's scene
-     * @param movie Movie where the Scene was shot
-     * @param place Place where the Scene was shot
+     *
+     * @param movie   Movie where the Scene was shot
+     * @param place   Place where the Scene was shot
      * @param dayTime DayTime when the Scene was shot
      */
     public Scene (Movie movie, Place place, DayTime dayTime)
     {
         this(movie);
-        if(place.getType() == PlaceType.THEATRE)
-            setPlace((Theatre) place);
-        else
-            setPlace((ExternalPlace) place, dayTime);
+        setPlace(place, dayTime);
     }
 
     /**
      * Constructor setting the movie's scene and the place's scene
-     * @param movie Movie where the Scene was shot
-     * @param place Place where the Scene was shot
-     * @param dayTime DayTime when the Scene was shot
+     *
+     * @param movie       Movie where the Scene was shot
+     * @param place       Place where the Scene was shot
+     * @param dayTime     DayTime when the Scene was shot
      * @param description Description of the scene to be created
      */
     public Scene (Movie movie, Place place, DayTime dayTime, String description)
@@ -114,6 +118,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for Id attribute
+     *
      * @return Id's Scene
      */
     @Override
@@ -124,6 +129,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for description attribute
+     *
      * @return description's Scene
      */
     public String getDescription ()
@@ -133,6 +139,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for dayTime attribute
+     *
      * @return dayTime's Scene
      */
     public DayTime getDayTime ()
@@ -142,6 +149,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for dayTime attribute
+     *
      * @return dayTime's Scene
      */
     public Movie getMovie ()
@@ -151,6 +159,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for setups attribute
+     *
      * @return setups' Scene
      */
     public List<Setup> getSetups ()
@@ -160,6 +169,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for place attribute
+     *
      * @return place's Scene
      */
     public Place getPlace ()
@@ -169,6 +179,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for description attribute
+     *
      * @param description Description's Scene
      */
     public void setDescription (String description)
@@ -178,6 +189,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for dayTime attribute
+     *
      * @param dayTime DayTime's Scene
      */
     void setDayTime (DayTime dayTime)
@@ -187,6 +199,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for movie attribute
+     *
      * @param movie Movie's Scene
      */
     void setMovie (Movie movie)
@@ -196,11 +209,12 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for place attribute for a theatre
+     *
      * @param theatre Theatre's Scene
      */
     public void setPlace (Theatre theatre)
     {
-        if (theatre != null && !this.place.equals(theatre)) {
+        if (theatre != null && !theatre.equals(this.place)) {
             this.place = theatre;
             theatre.addScenes(this);
         }
@@ -208,6 +222,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for place attribute for an external place with default dayTime (DayTime.DAY)
+     *
      * @param externalPlace ExternalPlace's Scene
      */
     public void setPlace (ExternalPlace externalPlace)
@@ -217,25 +232,52 @@ public class Scene extends Model<Integer>
 
     /**
      * Setter for place attribute for an external place
+     *
      * @param externalPlace ExternalPlace's Scene
-     * @param dayTime DayTime's Scene
+     * @param dayTime       DayTime's Scene
      * @throws ModelException The daytime must not be null for external places
      */
     public void setPlace (ExternalPlace externalPlace, DayTime dayTime)
     {
-        if (externalPlace != null && !this.place.equals(externalPlace)) {
-            if(dayTime == null)
+        if (externalPlace != null && !externalPlace.equals(this.place)) {
+            if (dayTime == null) {
                 throw new ModelException("The daytime must not be null for external places");
+            }
 
             this.dayTime = dayTime;
             this.place = externalPlace;
             externalPlace.addScenes(this);
-
         }
     }
 
     /**
+     * Setter for the place attribute when place is an instance of Place
+     * @param place the place
+     * @param dayTime the day time
+     */
+    public void setPlace (Place place, DayTime dayTime)
+    {
+        place = (Place) Hibernate.unproxy(place);
+        if (place.getType() == PlaceType.EXTERNAL_PLACE) {
+            setPlace((ExternalPlace) place, dayTime);
+        }
+        else {
+            setPlace((Theatre) place);
+        }
+    }
+
+    /**
+     * Setter for the place attribute when place is an instance of Place
+     * @param place the place
+     */
+    public void setPlace (Place place)
+    {
+        this.setPlace(place, DayTime.DAY);
+    }
+
+    /**
      * Add a list of setups to the setups' list attribute
+     *
      * @param setups List to be added
      */
     public void addSetups (Setup... setups)
@@ -248,6 +290,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Check if the two objects are equals
+     *
      * @param o Object to be compared
      * @return true if they are equals, false instead
      */
@@ -257,6 +300,7 @@ public class Scene extends Model<Integer>
         if (this == o) {
             return true;
         }
+        o = Hibernate.unproxy(o);
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -268,6 +312,7 @@ public class Scene extends Model<Integer>
 
     /**
      * Getter for Id attribute as an hashcode
+     *
      * @return Id's Scene
      */
     @Override

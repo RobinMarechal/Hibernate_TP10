@@ -4,6 +4,7 @@ import app.models.*;
 import libs.DayTime;
 import libs.PlaceType;
 import libs.mvc.models.ModelDAO;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +36,14 @@ public class MovieDAO extends ModelDAO<Movie, Integer>
         for (Object[] result : results) {
             Scene scene = (Scene) result[1];
 
+            Object unproxied = Hibernate.unproxy(result[0]);
+
             if (placeType == PlaceType.EXTERNAL_PLACE) {
-                ExternalPlace place = (ExternalPlace) result[0];
+                ExternalPlace place = (ExternalPlace) unproxied;
                 scene.setPlace(place, scene.getDayTime());
             }
             else {
-                Theatre place = (Theatre) result[0];
+                Theatre place = (Theatre) unproxied;
                 scene.setPlace(place);
             }
 

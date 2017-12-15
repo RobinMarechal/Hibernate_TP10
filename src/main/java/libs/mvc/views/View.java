@@ -35,8 +35,13 @@ public abstract class View<CType extends Controller> extends AnchorPane
 
     protected void setSizeOfColumnInTable (TableColumn column, Region container, double percentageWidth)
     {
+        setSizeOfColumnInTable(column, container, percentageWidth, 0);
+    }
+
+    protected void setSizeOfColumnInTable (TableColumn column, Region container, double percentageWidth, double toRemove)
+    {
         //        column.setPrefWidth(container.getWidth() * percentageWidth / 100);
-        column.setPrefWidth(Template.CONTENT_WIDTH * percentageWidth / 100);
+        column.setPrefWidth((Template.CONTENT_WIDTH - toRemove) * percentageWidth / 100);
     }
 
     public void addComponents (Region... regions)

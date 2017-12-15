@@ -14,7 +14,7 @@ public class ClapController extends Controller<Clap, ClapPrimaryKey, ClapDAO>
     }
 
     @Override
-    protected ClapDAO prepareDAO ()
+    protected ClapDAO getDao ()
     {
         return new ClapDAO();
     }

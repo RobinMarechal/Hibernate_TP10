@@ -2,6 +2,7 @@ package libs.mvc.controllers;
 
 import fr.polytech.marechal.FormMap;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import libs.EntityManagerHolder;
 import libs.mvc.models.Model;
 import libs.mvc.models.ModelDAO;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 
 /**
  * Abstract model controller
+ *
  * @param <ModelPKType> the type of the model's primary key
  */
 public abstract class Controller<MType extends Model, ModelPKType extends Serializable, DaoType extends ModelDAO>
@@ -26,22 +28,24 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
     /**
      * Default constructor
      */
-    public Controller()
+    public Controller ()
     {
         this.em = EntityManagerHolder.getEntityManager();
-        this.dao = prepareDAO();
+        this.dao = getDao();
     }
 
-    abstract protected DaoType prepareDAO ();
+    abstract protected DaoType getDao ();
 
     /**
      * Show the view that displays one model's instance
+     *
      * @param id the primary key
      */
     public abstract void show (ModelPKType id);
 
     /**
      * Show the details of a model instance
+     *
      * @param model the model instance
      */
     public abstract void showDetails (MType model);
@@ -49,16 +53,18 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
     /**
      * Show the view that displays the list of data
      */
-    public abstract void showAll();
+    public abstract void showAll ();
 
     /**
      * Display a view in the template
+     *
      * @param view the view to display in the template
      */
     public void setTemplateView (View view)
     {
         Template.getInstance().setView(view);
     }
+
     /**
      * Show the dialog for the modification or the creation of the model
      */
@@ -80,10 +86,11 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
 
     /**
      * Show the deletion dialog for a data type
-     * @param model the model to delete
+     *
+     * @param model    the model to delete
      * @param dataName the name of the data
      */
-    protected void showDeleteDialogForClass(MType model, String dataName)
+    protected void showDeleteDialogForClass (MType model, String dataName)
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -91,9 +98,8 @@ public abstract class Controller<MType extends Model, ModelPKType extends Serial
         alert.setContentText("This can't be undone.");
         alert.setTitle("Delete a " + dataName);
 
-        alert.show();
 
-        if (alert.getResult().getButtonData().isDefaultButton()) {
+        if (alert.showAndWait().get() == ButtonType.OK) {
             delete(model);
         }
     }

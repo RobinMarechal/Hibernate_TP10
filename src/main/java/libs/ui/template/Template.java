@@ -51,7 +51,7 @@ public class Template extends Scene
         super(new Pane());
 
         layout = new BorderPane();
-        layout.setPrefWidth(CONTENT_WIDTH + NAVBAR_WIDTH + 5);
+        layout.setPrefWidth(CONTENT_WIDTH + NAVBAR_WIDTH - 5);
         layout.setPrefHeight(HEIGHT + 18.33);
         layout.getStyleClass().add("bg-almost-white");
         this.setRoot(layout);

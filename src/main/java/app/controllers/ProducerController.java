@@ -27,7 +27,7 @@ public class ProducerController extends Controller<Producer, Integer, ProducerDA
     }
 
     @Override
-    protected ProducerDAO prepareDAO ()
+    protected ProducerDAO getDao ()
     {
         return new ProducerDAO();
     }

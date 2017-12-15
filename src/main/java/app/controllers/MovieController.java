@@ -2,11 +2,13 @@ package app.controllers;
 
 import app.models.*;
 import app.models.dao.MovieDAO;
+import app.models.dao.PlaceDAO;
 import app.models.dao.ProducerDAO;
 import app.views.movies.AllMoviesView;
 import app.views.movies.CreateMovieDialog;
 import app.views.movies.MovieDetailsDialog;
 import app.views.movies.ShowMovieView;
+import app.views.scenes.CreateSceneView;
 import fr.polytech.marechal.FormMap;
 import fr.polytech.marechal.exceptions.ErrorType;
 import fr.polytech.marechal.exceptions.FormException;
@@ -19,10 +21,12 @@ import libs.ui.components.dialogs.Dialog;
 import libs.ui.components.dialogs.DialogsManager;
 import libs.ui.template.Template;
 import libs.ui.template.nav.NavbarItem;
+import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieController extends Controller<Movie, Integer, MovieDAO> implements Home
 {
@@ -34,7 +38,7 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
     }
 
     @Override
-    protected MovieDAO prepareDAO ()
+    protected MovieDAO getDao ()
     {
         return new MovieDAO();
     }
@@ -54,14 +58,14 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
     @Override
     public void show (Integer id)
     {
-        Movie Movie = dao.find(id);
-        View  view  = new ShowMovieView(this, Movie, Movie.getScenes());
+        Movie movie = dao.find(id);
+        View  view  = new ShowMovieView(this, movie, movie.getScenes());
         this.setTemplateView(view);
         selectNabarItem();
     }
 
     @Override
-    public void showDetails (Movie model)
+    public void showDetails (Movie movie)
     {
         List<Scene> scenes;
         List<Setup> setups;
@@ -76,7 +80,7 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
         long nbScenesByNight;
         long nbScenesByDay;
 
-        scenes = model.getScenes();
+        scenes = movie.getScenes();
         nbScenes = scenes.size();
 
         nbTheatres = scenes.stream().filter(scene -> scene.getPlace().getType() == PlaceType.THEATRE).count();
@@ -99,7 +103,7 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
         details.put("nbClaps", nbClaps);
         details.put("totalClapDuration", totalClapDuration);
 
-        Dialog dialog = new MovieDetailsDialog(this, model, details);
+        Dialog dialog = new MovieDetailsDialog(this, movie, details);
         DialogsManager.instance.openDialog(dialog);
     }
 
@@ -210,5 +214,14 @@ public class MovieController extends Controller<Movie, Integer, MovieDAO> implem
 
         View view = new ShowMovieView(this, movie, scenes);
         setTemplateView(view);
+    }
+
+    public void showSceneCreationDialog (Movie movie)
+    {
+        List<Place> places = new PlaceDAO().all();
+        places = places.stream().map(place -> (Place) Hibernate.unproxy(place)).collect(Collectors.toList());
+
+        Dialog dialog = new CreateSceneView(new SceneController(), places, movie, null);
+        DialogsManager.instance.openDialog(dialog);
     }
 }
